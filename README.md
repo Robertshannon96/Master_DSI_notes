@@ -1,2 +1,6 @@
 # Master_DSI_notes
-Master note file
+
+
+#Relevant links 
+* [Quick Reference guide](https://github.com/GalvanizeDataScience/course-outline/tree/20-10-DS-DEN_DEN19/quick-reference)
+
