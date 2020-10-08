@@ -6,6 +6,8 @@
 
 * [Quick Reference guide](https://github.com/GalvanizeDataScience/course-outline/tree/20-10-DS-DEN_DEN19/quick-reference)
 
+* [Pandas Groupby syntax](https://pandas.pydata.org/pandas-docs/stable/user_guide/groupby.html)
+
 
 
 --------------------------------------------
@@ -95,7 +97,7 @@ df = pd.read_csv('my_data.csv', header=None, names=['col1', 'col2', ...., 'col12
 ```
 
 ```python
-# How to clean data / cleaning data
+# How to clean data / cleaning data with pandas
 
 # Clean column names
 df.columns
@@ -122,7 +124,7 @@ df[(df['chlorides'] >= 0.04) & (df['chlorides'] < 0.08)]
 ```python
 # creating and dropping columns in pandas
 # how to create a column in pandas
-# how to delete a column in pandas
+# how to delete a column in pandas / delete column / drop column
 df['non_free_sulfer'] = df['total sulfur dioxide'] - df['free sulfur dioxide'] # add a new column titled non_free sulfer
 
 df.drop('non_free_sulfur2', axis =1. inplace = True) # Drop the non_free_sulfur2 column. Axis = 1 is referring to axis 1 which is columns
@@ -142,6 +144,41 @@ df['incident_date'] = pd.to_datetime(df['incident_date'])
 
 ```
 
+```python
+# groupby in pandas / how to use grouby in pandas
+
+df.groupby('quality') # Note that this returns back to us a groupby object. It doesn't actually 
+                      # return to us anything useful until we perform some aggregation on it. 
+
+groupby_obj = df.groupby('quality')
+groupby_obj.mean()
+groupby_obj.max()
+groupby_obj.count()
+# pull a specfic column from quality
+df.groupby('quality').count()['fixed_acidity'] 
+
+# We can also apply different groupby statistics to different columns...
+# here we are grouping by quality but using a dictonary to return different aggregate functions upon different columns. Useful!
+df.groupby('quality').agg({'chlorides': 'sum', 'fixed_acidity': 'mean'})
+```
+```python
+# sorting in pandas / how to sort in pandas
+
+df.sort_values('quality') # Note: this is ascending by default.
+df.sort_values('quality', ascending=False)
+
+
+df.sort_values(['quality', 'alcohol'], ascending=[True, False]) # ascending=False will apply to both columns. 
+```
+```python
+# how to reset index in pandas / reset index in pandas
+df.sort_values(['quality', 'alcohol'], ascending=[True, False].reset_index())
+# reset index is extremely useful when using groupby function
+```
+```python
+# how to set an index in pandas
+df_new.set_index(['three', 'four', 'five'])
+```
 
 ```python
 # Useful dataframe attributes
@@ -207,7 +244,25 @@ df.loc[0:10, 'fixed_acidity']
 
 df.loc[10:15, ['chlorides', 'fixed_acidity']]
 ```
+```python
+# how to combine datasets with pandas / combining datasets in pandas
+# get_dummies is a method called on the pandas module - you simply pass in a Pandas Series 
+# or DataFrame, and it will convert a categorical variable into dummy/indicator variables. 
+quality_dummies = pd.get_dummies(wine_df.quality, prefix='quality')
+quality_dummies.head()
 
+#Now let's look at the join() method. Remeber, this joins on indices by default. This means that we can simply join our quality dummies dataframe back to our original wine dataframe with the following...
+
+joined_df = wine_df.join(quality_dummies)
+joined_df.head() 
+
+# Let's now look at concat. concatanate two dataframes together
+joined_df2 = pd.concat([quality_dummies, wine_df], axis=1)
+joined_df2.head()
+
+# Using pd.merge
+pd.merge(red_wines_quality_df, white_wines_quality_df, on=['quality'], suffixes=[' red', ' white'])
+```
 
 ```python
 # Selecting a subset of columns
@@ -296,6 +351,18 @@ a           0.1
 b           0.2
 c          10.1
 ```
+
+```python
+# how to graph in pandas
+# NOTE- Do not give presentations using pandas plots. use matplotlib for this.
+
+df.plot(kind = 'hist')
+df.hist(figsize = 10) # shows a lot of histograms.  
+df['quality'].plot(kind = 'hist')
+df.plot(kind = 'scatter', x = 'x_var', y= 'y_var')
+df.plot(kind ='box')
+```
+
 -----------------------------------------
 ## Matplotlib
 
