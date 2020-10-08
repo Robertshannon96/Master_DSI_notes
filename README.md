@@ -9,6 +9,12 @@
 
 
 --------------------------------------------
+## Del, Topics to study each night
+* Pandas Data frames
+
+
+
+-----------------------
 
 ## Markdown style Guide
 * One '#' is used for the biggest size text
@@ -60,6 +66,97 @@ remove_border()
 
 ### Pandas
 * Indexing
+
+```python
+import pandas as pd # Standard import
+```
+
+```python
+# Create a dataframe using pandas
+
+import pandas as pd # I haven't actually done this in code yet. 
+data_lst = [{'a': 1, 'b': 2, 'c':3}, {'a': 4, 'b':5, 'c':6, 'd':7}]
+df = pd.DataFrame(data_lst)
+df
+
+Out[]:	a	b	c	d
+0	1	2	3	NaN
+1	4	5	6	7.0
+```
+
+```python
+# Reading in data with pandas/ reading external data
+df = pd.read_csv('my_data.csv')
+
+# if no header name
+df = pd.read_csv('my_data.csv', header=None)
+
+df = pd.read_csv('my_data.csv', header=None, names=['col1', 'col2', ...., 'col12'])
+```
+
+```python
+# Useful dataframe attributes
+
+df.shape # gives the number of rows and cols
+
+df.columns # gives back a list of all column names
+
+df.describe()  # gives summary statistics for all numeric cols
+
+df.head() # shows you the first n rows (n=5)
+
+df.tail() # shows the last n rows (n-5)
+
+```
+
+```python
+# How to rename a column in pandas
+# Rename an individual column in the original data frame. 
+
+df.rename(columns={'fixed acidity': 'fixed_acidity'}, inplace=True)
+print(df.columns)
+
+```
+```python
+# replace all spaces with underscored in dataframe using pandas
+df2 = df.copy()
+cols = df2.columns.tolist()
+cols = [col.replace(' ', '_') for col in cols]
+df2.columns = cols
+df2.volatile_acidity
+```
+```python
+# acess a certain column in a dataframe using pandas
+df['chlorides'] # Grabs the 'chlorides' column. 
+```
+```python
+# accessing multiple columns by passingin a list of column names pandas
+
+df[['chlorides', 'volatile acidity']]
+```
+```python
+# row indexing using pandas
+
+df[:3] # This will grab from the beginning up to but not including the row at index 3. 
+
+# This will grab up to but not including the row at index 1 (i.e. it'll grab the row  at index 0). 
+df[:1]
+
+```
+```python
+# using loc and iloc in pandas
+# .loc is looking for lables or location
+# .iloc is looking for indicies
+
+df.loc[0, 'fixed_acidity'] # 0 is one of the index labels, and 'fixed acidity' is a column label.
+
+# Ranges on our index labels still work (as long as they're numeric).
+df.loc[0:10, 'fixed_acidity']
+
+
+df.loc[10:15, ['chlorides', 'fixed_acidity']]
+```
+
 
 ```python
 # Selecting a subset of columns
