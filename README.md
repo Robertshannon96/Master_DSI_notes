@@ -85,7 +85,7 @@ Out[]:	a	b	c	d
 ```
 
 ```python
-# Reading in data with pandas/ reading external data
+# Reading in data with pandas/ reading external data/ import data
 df = pd.read_csv('my_data.csv')
 
 # if no header name
@@ -93,6 +93,55 @@ df = pd.read_csv('my_data.csv', header=None)
 
 df = pd.read_csv('my_data.csv', header=None, names=['col1', 'col2', ...., 'col12'])
 ```
+
+```python
+# How to clean data / cleaning data
+
+# Clean column names
+df.columns
+
+cols = df.columns.tolist()
+cols = [col.replace('#', 'num') for col in cols] # this replaces the pound sign with num
+cols = [col.replace(' ', '_'.lower())]
+print(cols)
+
+```
+```python
+# masking in pandas 
+df['chlorides'] <= 0.08 # This just gives us a mask - tells us True or False whether each row 
+                 # fit's the condition.
+
+# To use a mask, we actually have to use it to index into the DataFrame (using square brackets). 
+df[df['chlorides'] <= 0.08]
+
+
+# Okay, this is cool. What if I wanted a slightly more complicated query...
+df[(df['chlorides'] >= 0.04) & (df['chlorides'] < 0.08)]
+
+```
+```python
+# creating and dropping columns in pandas
+# how to create a column in pandas
+# how to delete a column in pandas
+df['non_free_sulfer'] = df['total sulfur dioxide'] - df['free sulfur dioxide'] # add a new column titled non_free sulfer
+
+df.drop('non_free_sulfur2', axis =1. inplace = True) # Drop the non_free_sulfur2 column. Axis = 1 is referring to axis 1 which is columns
+
+```
+```python
+# Null values in pandas / how to get rid of missing values / how to fill missing values in pandas
+df.fillna(-1, inplace=True)
+df.dropna(inplace=True) # Notice the addition of the inplace argument here. 
+```
+
+
+```python
+# Cast the date column as datetime object / how to add date and time with pandas
+
+df['incident_date'] = pd.to_datetime(df['incident_date'])
+
+```
+
 
 ```python
 # Useful dataframe attributes
@@ -147,6 +196,8 @@ df[:1]
 # using loc and iloc in pandas
 # .loc is looking for lables or location
 # .iloc is looking for indicies
+# .iloc is non-inclusive
+# .loc is inclusive
 
 df.loc[0, 'fixed_acidity'] # 0 is one of the index labels, and 'fixed acidity' is a column label.
 
