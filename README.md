@@ -8,6 +8,7 @@
 
 * [Pandas Groupby syntax](https://pandas.pydata.org/pandas-docs/stable/user_guide/groupby.html)
 
+* [Matplotlib intro syntax]()
 
 
 --------------------------------------------
@@ -428,8 +429,283 @@ plt.annotate('local max', xy=(2, 1), xytext=(3, 1.5),
 plt.ylim(-2, 2)
 plt.show()
 ```
+```python
+# standard default style you should use for matplot
+plt.style.use('ggplot') # I also like fivethirtyeight'
+matplotlib.rcParams.update({'font.size': 16, 'font.family': 'sans'})
+```
+```python
+
+# plt example
+x_data = np.arange(0, 4, .011)
+
+y1_data = np.sin(x_data)
+y2_data = np.cos(x_data)
+
+plt.subplot(2, 1, 1)      # #rows, #cols, plotnumber
+plt.plot(x_data, y1_data) # First plot
+plt.plot(x_data, y2_data) # Second plot in same subplot
+plt.title('using plt')    # plot title
+
+plt.subplot(2, 1, 2)                 # #rows, #cols, plotnumber
+plt.plot(x_data, y2_data, color='r') # Second plot in a separate subplot
+plt.xlabel('x')
+
+plt.show()
+```
+```python
+# how to iterate through axes in matplot
+# super important matplotlib function!
+fig, axs = plt.subplots(2, 3)
+
+for i, ax in enumerate(axs.flatten()):
+    string_to_write = f"Plot: {i}"
+    ax.text(0.1, 0.4, string_to_write, fontsize=20)
+    #       ^ These were figured out through trial and error.
+    
+fig.tight_layout()
+
+```
+```python
+# how to write some text to a single axis
+fig, ax = plt.subplots(figsize=(8, 2))
+ax.text(0.35, 0.4, "Hi Y'all!", fontsize=35)
+```
+```python
+# titles and labels in matplotlib
+# how to add a label in matplotlib
+# how to add a title in matplotlib
+fig, ax = plt.subplots()
+ax.set_title("This is a Great Plot!")
+
+# each axes can have its own title
+# how to give each subplot its own title in matplotlib
+
+fig, axs = plt.subplots(2, 3)
+
+for i, ax in enumerate(axs.flatten()):
+    ax.set_title(f"Plot: {i}")
+fig.tight_layout()
 
 
+# axis labels / how to set labels in matplotlib
+# Axis labels use ax.set_xlabel and ax.set_ylabel.
+
+fig, ax = plt.subplots()
+ax.set_title("This is a Great Plot!")
+ax.set_xlabel("This is an x-label")
+ax.set_ylabel("This is a y-label!")
+```
+```python
+# scatter plots in matplotlib
+# how to make a scatterplot in matplotlib
+x = np.random.normal(size=50)
+y = np.random.normal(size=50)
+fig, ax = plt.subplots()
+ax.scatter(x, y)
+
+# when there is a lot of points in a scatter plot uses alpha
+fig, ax = plt.subplots()
+ax.scatter(x, y, alpha=0.3)  # alpha controls transparency (0 is transparent; 1 is opaque)
+
+```
+```python
+# linear regression data in matplotlib
+```
+```python
+# how to add color to your graph matplotlib
+# adding color matplotlib
+# Getting data
+x_blue = np.random.uniform(size=100)
+y_blue = 1.0*x_blue + np.random.normal(scale=0.2, size=100)
+
+x_red = np.random.uniform(size=100)
+y_red = 1.0 - 1.0*x_red + np.random.normal(scale=0.2, size=100)
+
+# plotting
+fig, ax = plt.subplots()
+ax.scatter(x_blue, y_blue, color="blue")
+ax.scatter(x_red, y_red, color="red")
+```
+```python
+# drawing line plots 
+# line plots in matplotlib
+x = [0, 1, 2, 3, 4]
+y = [-1, 0, 1, 0, 1]
+
+fig, ax = plt.subplots()
+ax.plot(x, y, linewidth=2.5)
+```
+```python
+# plot linear in matplotlib
+# plot quadratic in matplotlib
+# plot cubic in matplot lib
+linear = lambda x: x - 0.5
+quadratic = lambda x: (x - 0.25)*(x - 0.75)
+cubic = lambda x: (x - 0.333)*(x - 0.5)*(x - 0.666)
+functions = [linear, quadratic, cubic]
+
+# Set up the grid.
+x = np.linspace(0, 1, num=250)
+
+fig, axs = plt.subplots(1, 3, figsize=(12, 3))
+for f, ax in zip(functions, axs.flatten()):
+    ax.plot(x, f(x))
+```
+```python
+# linear regression in matplotlib
+slopes = [-1.0, -0.5, -0.25, 0.25, 0.5, 1.0]
+x_linspace = np.linspace(-1, 1, num=250)
+
+fig, axs = plt.subplots(2, 3, figsize=(10, 4))
+
+for i, ax in enumerate(axs.flatten()):
+    x = np.random.uniform(-1, 1, size=50)
+    y = slopes[i]*x + np.random.normal(scale=0.2, size=50)
+    ax.plot(x_linspace, slopes[i]*x_linspace, linewidth=2.5)
+    ax.scatter(x, y, color="blue")
+    ax.set_xlim(-1, 1)
+    ax.set_ylim(-1.5, 1.5)
+    ax.set_title("Slope: {:2.2f}".format(slopes[i]))
+    
+fig.tight_layout()
+```
+```python
+# Drawing bar charts
+# how to make a bar chat in matplotlib
+
+record_counts = pd.DataFrame(
+    {'count': [135, 40, 20, 30, 15], 
+     'genre': ['rock', 'metal', 'jazz', 'rap', 'classical']}
+)
+# x will be the left hand edge of the bars.
+x = np.arange(len(record_counts['genre']))
+
+fig, ax = plt.subplots()
+
+ax.bar(x, record_counts['count'])
+# Make the ticks at the center of the bar using:
+#   center = left_edge + 0.5*width
+ax.set_xticks(x)
+ax.set_xticklabels(record_counts['genre'])
+```
+```python
+# code to show the different plot styles
+# plot styles in matplotlib
+# how to stlye your graph in matplotlib
+
+x = np.random.rand(100)
+y = 4 +3*x*np.random.rand(100)
+for style in plt.style.available[:13]:
+fig = plt.figure(figsize=(8,8))
+plt.style.use(style)
+plt.scatter(x,y)
+plt.title(f'{style}', fontweight='bold', fontsize= 16)
+```
+```python
+# function to draw a scatter plot
+def draw_scatterplot(ax, center, size, color):
+    x = np.random.normal(loc=center[0], size=size)
+    y = np.random.normal(loc=center[1], size=size)
+    ax.scatter(x, y, color=color, label=color+' data points')
+
+# function to draw a line matplotlib
+def draw_line(ax, x_range, intercept, slope):
+    x = np.linspace(x_range[0], x_range[1], num=250)
+    ax.plot(x, slope*x + intercept, linewidth=2, label='decision boundary')
+
+```
+```python
+# location legend in matplotlib
+
+Location String	Location Code
+'best'	0
+'upper right'	1
+'upper left'	2
+'lower left'	3
+'lower right'	4
+'right'	5
+'center left'	6
+'center right'	7
+'lower center'	8
+'upper center'	9
+'center'	10
+
+* bbox_to_anchor to controls the location of the box in coordination with loc. You can use a '2-tuple' or '4-tuple' of floats. The '2-tuple' controls the (x,y) coordinates of box. The '4-tuple' controls the (x,y,width,height)
+
+
+```
+```python
+# how to set twin axes in matplotlib
+fig, ax = plt.subplots()
+ax.plot(x,np.exp(x))
+ax.set_ylabel('exp')
+ax.set_xlabel('x')
+ax2 = ax.twinx()
+ax2.plot(x, np.log(x),'bo-') # 'bo-': blue circle connected via line
+ax2.set_ylabel('log')
+ax.set_title('Exponential and Log Plots')
+fig.legend(labels = ('exp','log'),loc='upper left');
+```
+```python
+# heatmap example
+
+
+vegetables = ["cucumber", "tomato", "lettuce", "asparagus",
+              "potato", "wheat", "barley"]
+farmers = ["Farmer Joe", "Upland Bros.", "Smith Gardening",
+           "Agrifun", "Organiculture", "BioGoods Ltd.", "Cornylee Corp."]
+
+harvest = np.array([[0.8, 2.4, 2.5, 3.9, 0.0, 4.0, 0.0],
+                    [2.4, 0.0, 4.0, 1.0, 2.7, 0.0, 0.0],
+                    [1.1, 2.4, 0.8, 4.3, 1.9, 4.4, 0.0],
+                    [0.6, 0.0, 0.3, 0.0, 3.1, 0.0, 0.0],
+                    [0.7, 1.7, 0.6, 2.6, 2.2, 6.2, 0.0],
+                    [1.3, 1.2, 0.0, 0.0, 0.0, 3.2, 5.1],
+                    [0.1, 2.0, 0.0, 1.4, 0.0, 1.9, 6.3]])
+
+
+fig, ax = plt.subplots(figsize=(12,12))
+im = ax.imshow(harvest) # this is actually how you show the heat map
+
+# We want to show all ticks...
+ax.set_xticks(np.arange(len(farmers)))
+ax.set_yticks(np.arange(len(vegetables)))
+# ... and label them with the respective list entries
+ax.set_xticklabels(farmers)
+ax.set_yticklabels(vegetables)
+
+# Rotate the tick labels and set their alignment.
+plt.setp(ax.get_xticklabels(), rotation=45) #, ha="right") #,  # setp --> set preferences
+                            
+
+# Loop over data dimensions and create text annotations.
+for i in range(len(vegetables)):
+    for j in range(len(farmers)):
+        text = ax.text(j, i, harvest[i, j], color="w",fontsize=14)
+                       #ha="center", va="center", color="w",fontsize=14)
+# va -->'center' | 'top' | 'bottom' | 'baseline'
+# ha -->'center' | 'right' | 'left' 
+                                                    
+
+ax.set_title("Harvest of local farmers (in tons/year)")
+fig.tight_layout()
+```
+```python
+# histogram in matplotlib
+# how to create a histogram in matplotlib
+N_points = 100000
+n_bins = 20
+
+# Generate a normal distribution, center at x=0 
+x = np.random.randn(N_points)
+
+fig, axs = plt.subplots(1, 2, sharey=False, tight_layout=True)
+
+# We can set the number of bins with the `bins` kwarg
+axs[0].hist(x, bins=n_bins)
+axs[1].hist(x, bins=n_bins, density=True);
+```
 
 
 
