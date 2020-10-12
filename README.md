@@ -19,6 +19,8 @@
 --------------------------------------------
 ## Del, Topics to study each night
 * Pandas Data frames
+* Stats Quest for breakdown of stats concepts
+
 
 
 
@@ -962,3 +964,37 @@ Shape of a matrix is the number of rows and number of columns
 * contionous distribution related to the Poisson distribution
 * How much time will it take to observe the first event.
 * ex : Students arrive at a local bar and restaurant at a mean rate of 1 student every 10 minutes. What is the probability that the next student will enter the bar within the next 5 minutes?
+
+----------------------------------------------------------
+
+## Binomial tests
+* A binomial test is a specific type of hypothesis test involving random variables that can be modeled by the binomial distribution
+
+1. State a scientific question - its answer should be yes or no
+2. State a null hypothesis - the skeptic’s answer to the question -- the status qho
+3. State an alternative hypothesis - the non-skeptic’s answer to the question
+4. Create a model - the model assumes the null hypothesis is true
+5. Set a threshold - decide how surprised you need to be to reject the null
+hypothesis
+6. Collect your data
+7. Calculate a p-value - the probability of finding a result equally or more
+extreme if the null hypothesis is true
+8. Compare the p-value to your stated rejection threshold
+
+
+
+
+* significance level in hypothesis testing - probabiity we would be wrong when assuming the null
+* P value -the probility of seeing something THIS extreme OR MORE assuming the null hypothesis
+
+
+1. Can matt land a kick flip 80% of the time?
+2. does he land the flip less than or equal to 80
+3. Null-  less than or equal to 80.
+4. 
+
+
+at first the null would be p <= 0.8, but if you are more skeptical you wold say p =0.8 because that
+
+
+p = 0.6
