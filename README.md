@@ -103,8 +103,14 @@ df = pd.DataFrame(data=data_vals, columns=data_cols)
 df
 
 ```
+
+## What to do when you first get data with pandas
+
+
 ```python
-# What to do when you first get data with pandas
+
+
+
 # first steps to take when working with data in pandas
 # how to begin with pandas
 # step by step guide on how to start with pandas
