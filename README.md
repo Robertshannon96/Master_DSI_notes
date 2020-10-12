@@ -10,6 +10,11 @@
 
 * [Matplotlib intro syntax]()
 
+* [Pandas lecture](http://localhost:8888/notebooks/post-lecture_intro_pandas_notes.ipynb)
+
+* [Pandas syntax page](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html)
+
+
 
 --------------------------------------------
 ## Del, Topics to study each night
@@ -86,6 +91,154 @@ Out[]:	a	b	c	d
 0	1	2	3	NaN
 1	4	5	6	7.0
 ```
+
+```python
+# how to create columns and rows with new data
+# how to make columns and rows with new data
+# Creating columns are rows with new data
+
+data_vals = [[1, 2, 3], [4, 5, 6]]
+data_cols = ['a', 'b', 'c']
+df = pd.DataFrame(data=data_vals, columns=data_cols)
+df
+
+```
+```python
+# What to do when you first get data with pandas
+# first steps to take when working with data in pandas
+# how to begin with pandas
+# step by step guide on how to start with pandas
+
+# 1: Start with the basics - exploring the data
+
+    df = pd.read_csv('data/winequality-red.csv')
+    df.head()
+    df.shape  # give you the number of rows and number of cols
+    df.columns # gives you back a list of all the column names
+    df.info()  # allows you to look at the data type for each column and the number of null values.
+    df.describe() # gives you summary stats for all of your numeric columns
+    df.tail() # shows you the lastr n rows
+    df.unique()
+    df['column name'].unique() # gives unique values in that column
+
+
+# 2: Clean your data!
+
+    df2 = df.copy() # best practice to make a copy of the original data
+    cols = df2.columns.tolist()   # All this does is takes the column and put its content into a list format
+    cols = [col.replace(' ', '_') for col in cols] # takes the list format and replaces all empty spaces with an underscore. ---- how to replace spaces with underscore in pandas
+    df2.columns = cols  # THIS IS IMPORTANT. You need to re-assign the manipulated column back into the data frame.
+
+
+    # If you need to rename a column in the original dataframe---
+    # how to rename a column with pandas
+    df.rename(columns={'original column name' : 'the_column_name_i_want_it_to_be_named_to'}, inplace = True)     # DONT FORGET THE INPLACE = TRUE!
+
+
+# 2.5: Dealing with NULL data.
+# how to get rid of null values
+# how to fix missing values
+
+    df.fillna(-1, inplace= True)  # this will fill all NA/NULL values with the value -1
+    df.dropna(inplace = True)    # this will just drop all column/spaces that have a NULL value
+
+
+     
+    
+
+
+# 3: Acessing your data!
+    df['column name'] # grabs the column titled 'column name'
+
+    df[['column1' , 'column2']]   # how to access multiple columns 
+
+    df[:3] # this will grab from the beginning up to but not including the row at index 3
+
+    df[:1] # this will grab up to but not including 
+
+
+
+# 4: How to mask your data
+df['column_name'] <= 0.08 # this just gives us a mask, tells us True or false wether each row fits the condition
+
+df[df['column_name'] <= 0.08 ] # proper way to use a mask 
+df[(df['column_name'] >= 0.04) & (df['column_name'] < 0.08)] # a more complicated mask
+
+# 5: How to create new columns
+df['new column'] = df['old column'] - df['old column2']
+
+
+# 6: Groupby/groupby/ how to groupby in pandas
+
+# when grouping you need to assign the group to a value or else it wil return the memory location.
+# when you group, the column you group by becomes the index. It will return all columns based on the groupby'd column
+
+    groupby_obj = df.groupby('column_name')
+    groupby_obj.mean()
+    groupby_obj.max()
+    groupby_obj.count()
+
+    # if you want to get a group by and a specific column:
+
+    df.groupby('column_name').count()['column_name2]
+
+    # how to group by multiple columns
+    
+    df.groupby(['column1', 'column2']).count()['column3']
+
+    # how to apply statistics to a group by
+    # how to group by an equation
+    # advanced groupby
+
+    df_new = df.groupby('column1').agg({'column2': 'sum', 'column3' : 'mean'}).reset_index()
+
+
+# 7: How to sort using pandas
+    # sorting data in pandas
+
+    df.sort_values('column_name') # default here is ascending
+    df.sort_values('column_name', ascending = False)
+
+
+    # a more specific sort
+
+    df['column_name'].sort_values(ascending = False) 
+
+    # you can sort by multiple columns by placing them in a list
+    # how to sort by multiple columns in pandas
+    # it will sort the first column passed first, then the second
+
+    df.sort_values(['column_1', 'column2'], ascending =[True, False]).reset_index(drop = True)
+
+
+
+#8 how to combine datasets with pandas
+    # how to join data sets in pandas
+
+
+# first you need to look at the dummies method. 
+
+column_name_dummies = pd.get_dummies(dataframe_df.columnname, prefix='quality')
+
+# now to actually join. How to join datasets
+
+    joined_df = dataframe_df.columnname.join(column_name_dummies)
+
+# how to concat two dataframes together
+# how to concatonate with pandas
+
+joined_df2 = pd.concat([column_name1, df_dataframe], axis = 1)
+
+# how to merge with pandas
+
+pd.merge(red_wines_quality_df, white_wines_quality_df, on=['quality'], suffixes=[' red', ' white'], how = 'outer')
+```
+
+
+
+
+
+
 
 ```python
 # Reading in data with pandas/ reading external data/ import data
