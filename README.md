@@ -866,10 +866,33 @@ axs[0].hist(x, bins=n_bins)
 axs[1].hist(x, bins=n_bins, density=True);
 ```
 
+ 
+## Scipy Stats Module
+
+```python
+
+import scipy.stats as stats
+
+unioform_dist = stats.randint(low=0, high =10)
+benoulli = stats.bernoulli(p=0.4)
+binomial = stats.binom(n =50, p=0.4)
+hypergeom = stats.gypergeom(M=20, n=7, N=12)  #non standard parameters
+poisson = stats.poisson(mu = 5) # mu is the same as lamda
+
+# contonous distributions
+uniform_cont = stats.uniform(loc-0, scale= 10)   #non-standard parameters
+normal = stats.norm(loc=0.0, scale=1) #non standard params
+exponental = stats.expon(loc=2.0)
+```
+
+```python
+# Calculating CDF / how to calculate cdf
+
+print("P(Binomial(n = 50, p -0.4) <=20) = ", binomial.cdf(20))
+print("p(Normal(mu=0.0, sigma= 1.0) <= 1.0 =", normal.cdf(1,0)))
 
 
-
-
+```
 ------------------------------
 
 
@@ -884,5 +907,58 @@ Shape of a matrix is the number of rows and number of columns
 * Dot product: An operation that takes two equal length vectors and returns a single number. 
 * Matrix multiplication can only happen when the number of a column in the firsst matrix matches the number of rows in the second matrix.
 
+## Probability distribution lecture
+### Discrete Distributions
+* Probability mass fucntion: PMF of a discrete distribution gives the probability of observing each possible outcome(x) of the random variable X
+* Cumulative distribution function - is the probability of observing an outcome less than or equal to x
+
+--------------------------
+
+### Continous distributions
+* continous distributions have a cdf that is smooth, not jumpy.
+* Probability density function (PDF) 
+* We can't take a running sum of the PDF to get a cdf, but in calculus there is integration. Think of it as taking the area under the curve.  
+
+* pmF calculates the probability of a sinlge event happening
+* the cdf calculates the probability of that one event and everything less than that. 
 
 
+### Types of Discrete Distributions
+#### Uniform Distribution
+* Describes a situation with a fininte number of outcomes, where each outcome is as equally likely as any other.  THIS IS ONLY MENT TO BE A SINGLE EVENT.       ex: a die roll
+
+#### Bernouli Distribution
+* Simplest distribution. It is a model of a single flip of a coin
+* there are only two possible outcomes for X, usually 1 or 0
+
+#### Binomial Distribution
+* is a counting distribution. It models flipping a coin multiple times and counting the number of certain outcomes.
+* parameters = n,p where n is the number of trials and p is the probability
+
+#### Hypergeometric Distribution
+* another counting distribution. This one models a deck of cards of two types(red/blue). If you shuffle the deck, draw some number of cards, and then count how many blue cards you have, this count is hyper geometrically distributed.
+
+* parameters = n- total sample size          k = total number of blue cards in deck    n = size of the hand you drew
+
+
+#### Poisson Distribution
+* Counting distribution
+* Models a process where events happen at a fixed rate or frequency and you're watching it for a fixed amount of time
+
+* ONL APPLICABLE if the events are independent and identically distributed
+* parameters = lambda 
+
+### Continous distributions
+
+
+#### Uniform Distribution
+* A set of outcomes that are all equally likely, but this time any number in an interval is a possible output of the random variable.
+
+
+#### Normal Distribution (Gauissian)
+* primary importance in probability and stats theory due to the Central Limit theorem.
+
+#### Exponential Distribution
+* contionous distribution related to the Poisson distribution
+* How much time will it take to observe the first event.
+* ex : Students arrive at a local bar and restaurant at a mean rate of 1 student every 10 minutes. What is the probability that the next student will enter the bar within the next 5 minutes?
