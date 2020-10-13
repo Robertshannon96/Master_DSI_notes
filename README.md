@@ -873,8 +873,58 @@ axs[1].hist(x, bins=n_bins, density=True);
 
 ```python
 
+# How to import scipy and make it look pretty
+# make scipy loook pretty
+
+
+import numpy as np
+import matplotlib.pyplot as plt
 import scipy.stats as stats
 
+# Always make it pretty.
+plt.style.use('ggplot')
+font = {'weight': 'bold',
+        'size':   16}
+plt.rc('font', **font)
+```
+
+
+```python
+# Scatter plot with jitter
+def one_dim_scatterplot(data, ax, jitter=0.2, **options):
+    ## why jitter? especially for bootstraping later
+    if jitter:
+        jitter = np.random.uniform(-jitter, jitter, size=data.shape)
+    else:
+        jitter = np.repeat(0.0, len(data))
+    ax.scatter(data, jitter, **options)
+    ax.yaxis.set_ticklabels([])
+    ax.set_ylim([-1, 1])
+    ax.tick_params(axis='both', which='major', labelsize=15)
+
+
+fig, ax = plt.subplots(1, figsize=(12, 1))
+one_dim_scatterplot(data, ax, s=15)
+```
+
+
+```python
+# The Empirical Distribution function
+def emperical_distribution(x, data):
+    weight = 1.0 / len(data)
+    count = np.zeros(shape=len(x))
+    for datum in data:
+        count = count + np.array(x >= datum)
+    return weight * count
+```
+
+
+
+
+
+
+
+```python
 unioform_dist = stats.randint(low=0, high =10)
 benoulli = stats.bernoulli(p=0.4)
 binomial = stats.binom(n =50, p=0.4)
@@ -998,3 +1048,127 @@ at first the null would be p <= 0.8, but if you are more skeptical you wold say 
 
 
 p = 0.6
+
+#### Review
+
+* What is a random Varialbe- A numerical representation of a natural phenomona. 
+
+* What is PMF - Discrete values
+* Probability Density function - something will happend in a given time
+* CDF = integral of the PDF, area under the curve depending what you're looking at. Typically, if looking for whats the probability between the bus arriving 20-30 minutes from now use pDF. Whats the probability of the bus arriving in at least 30 minutes use CDF
+* 
+
+
+
+--------------------------------------------------------------------------------------
+
+## Sampling Distributions
+
+* Population : a set of similar items or events
+    * Daily prices from the stock market
+    * Possible customers of insurance company
+
+* Sample : Subset of individuals from within a statsistal population
+* Idendically distributed: sample items have the same distribution function
+
+* The empirical distribution is 
+
+## Sampling Theory
+
+### BootStrap 
+* [Boostrap example](http://localhost:8888/notebooks/sampling-distributions.ipynb)
+* A bootstrap sample from a dataset is a sample taken with replacement from that dataset whose size is the size of the dataset itself.
+
+
+* whats the point of bootstraping? - The Bootstrap is a tool to quantify the variation in a statistical estimate. It can be used in almost any situation. 
+
+        * The bootstrap is a giant point in favor of the massive amount of computation all of us has at our disposal in modern day. Before the computer age, the practice of statistics was tedious and mathematical. Now we can estimate things earlier generations would never have dreamed of by simply putting to work some carefully engeneered slabs of silicon.
+
+```python
+def text_in_blank_plot(text, ax):
+    '''make a text box'''
+    _ = ax.text(0.5, 0.5, text, 
+                horizontalalignment='center',
+                verticalalignment='center',
+                fontsize=15)
+    ax.axis('off')
+
+
+np.random.seed(123)
+fig = plt.figure(figsize=(16, 4))
+# colspan: Number of columns for the axis to span downwards.
+ax = plt.subplot2grid((6, 3), (0, 0), colspan=2) 
+ax.get_xaxis().set_ticks([])
+ax.set_xlim(-2.5, 3)
+one_dim_scatterplot(data, ax, s=15)
+
+ax = plt.subplot2grid((6, 3), (0, 2), colspan=1)
+text_in_blank_plot("Original Sample", ax)
+
+## boostrapping 5 times
+for i in range(0, 5):
+    bootstrap_sample = np.random.choice(data, size=len(data), replace=True)
+    ax = plt.subplot2grid((6, 3), (i + 1, 0), colspan=2)
+    ax.get_xaxis().set_ticks([])
+    ax.set_xlim(-2.5, 3)
+    one_dim_scatterplot(bootstrap_sample, ax, c="black", s=15)
+    sample_median = np.median(bootstrap_sample)
+    ax.scatter([sample_median], 0, c="red", s=50)
+    ax = plt.subplot2grid((6, 3), (i + 1, 2), colspan=1)
+    text_in_blank_plot("Bootstrap Sample {}".format(i+1), ax)
+
+```
+```python
+#function to define bootstrap medians
+def bootstrap_sample_medians(data, n_bootstrap_samples=10**4):
+    bootstrap_sample_medians = []
+    for i in range(n_bootstrap_samples):
+        bootstrap_sample = np.random.choice(data, size=len(data), replace=True)
+        bootstrap_sample_medians.append(np.median(bootstrap_sample))
+    return bootstrap_sample_medians
+
+np.random.seed(321)
+bootstrap_medians = bootstrap_sample_medians(data)
+
+fig, ax = plt.subplots(1, figsize=(12, 4))
+ax.hist(data, bins=25, density=True, color="black", alpha=0.4,
+        label="Sample Data")
+ax.hist(bootstrap_medians, bins=25, density=True, color="red", alpha=0.75,
+        label="Bootstrap Sample medians")
+ax.legend()
+# ax.tick_params(axis='both', which='major', labelsize=15)
+_ = ax.set_title("Bootstrap Sample medians (10000 samples)", fontsize = 20)
+
+
+
+variance_of_sample = np.var(data)
+varaince_of_bootstrap_medians = np.var(bootstrap_medians)
+
+print("Variance of Sample: {:2.2f}".format(variance_of_sample))
+print("Variance of Sample medians: {:2.2f}".format(varaince_of_bootstrap_medians))
+
+
+```
+
+```python
+# 75 confidence interval with bootstrap
+
+np.random.seed(333)
+bootstrap_sample_75_percentiles = []
+for i in range(10000):
+    bootstrap = np.random.choice(data, size=len(data), replace=True)
+    bootstrap_75_percentile = np.percentile(bootstrap, 75)
+    bootstrap_sample_75_percentiles.append(bootstrap_75_percentile)
+
+fig, ax = plt.subplots(1, figsize=(10, 4))
+ax.hist(bootstrap_sample_75_percentiles, bins=500, density=True, color="black", alpha=0.5)
+ax.set_title("boostrap sample 75 percentiles", fontsize=20)
+# ax.tick_params(axis='both', which='major', labelsize=15)
+left_endpoint = np.percentile(bootstrap_sample_75_percentiles, 2.5)
+right_endpoint = np.percentile(bootstrap_sample_75_percentiles, 97.5)
+
+print("Sample 75'th Percentile: {:2.2f}".format(np.percentile(data, 75)))
+print("Bootstrap Confidence Interval for Population 75'th Percentile: [{:2.2f}, {:2.2f}]".format(
+    left_endpoint, right_endpoint))
+```
+
