@@ -1172,3 +1172,127 @@ print("Bootstrap Confidence Interval for Population 75'th Percentile: [{:2.2f}, 
     left_endpoint, right_endpoint))
 ```
 
+
+### Central Limit theorem
+
+* [Central limit theorem lecture](http://localhost:8888/notebooks/pre-lecture-central-limit-theorem.ipynb)
+
+
+*The stunning part of the central limit theorem is that it makes almost no assumptions about  𝑋 .  𝑋  can be anything, and it's sample means will always tend to be normal.
+
+* The central limit theorem is a miracle, pure and simple. There is no real reason it is true, it just is. Consider it a gift of rare order in the universe, more like a fundamental law of physics than an intuitive mathematical fact.
+
+* Here's an elevator pitch statement of the central limit theorem, good for job interviews: The central limit theorem allows us to make probabilistic statements about the sample mean from any population using the normal distribution.
+
+
+```python
+# how to find the midde 95% of the distribution
+# how to plot vertical distribution lines
+
+
+mu = 2 # mean
+sigma = 0.5 #standard deviation
+
+lunch = stats.norm(loc=mu, scale=sigma)
+
+time_low = lunch.ppf(0.001)
+time_high = lunch.ppf(0.999)
+num_times = 100
+
+times = np.linspace(time_low, time_high, num_times)
+lunch_pdf = lunch.pdf(times)
+
+time_025 = lunch.ppf(0.75)
+time_975 = lunch.ppf(0.975)
+
+fig, ax = plt.subplots(1, 1, figsize=(7,5))
+
+ax.plot(times, lunch_pdf, c='k', label = 'distribution')
+ax.axvline(time_025, color='red', linestyle='--', linewidth=1)
+ax.axvline(time_975, color='red', linestyle='--', linewidth=1)
+ax.set_xlabel('time taken for lunch')
+ax.set_ylabel('pdf')
+ax.set_title('Middle 95% of distribution')
+ax.legend()
+plt.tight_layout()
+plt.show()
+```
+
+```python
+
+# how to create a shaded region below the curve
+
+mask_gt = times >= time_025
+mask_lt = times <= time_975              # these three create masks for the graph.
+mask_middle = mask_gt & mask_lt
+
+fig, ax = plt.subplots(1, 1, figsize=(7,5))
+
+ax.plot(times, lunch_pdf, c='k', label = 'distribution')
+ax.fill_between(times, lunch_pdf, 0, 
+                where=mask_middle, color="red", alpha=0.2, label='middle 95%')
+ax.set_xlabel('time taken for lunch')
+ax.set_ylabel('pdf')
+ax.set_title('Middle 95% - filled')
+ax.legend(loc='upper right')
+plt.tight_layout(w_pad=0.5)
+plt.show()
+
+```
+
+```python
+# plot 95% distribution
+
+sample_mean = np.mean(data)
+sample_varaince = np.var(data)
+distribution_of_sample_minus_population_mean = stats.norm(0, np.sqrt(sample_varaince / len(data)))
+
+fig, ax = plt.subplots(1, figsize=(10, 4))
+x = np.linspace(-0.3, 0.3, num=250)
+pdf = distribution_of_sample_minus_population_mean.pdf(x)
+ax.plot(x, pdf, linewidth=3)
+
+# Shade under curve
+# Note: The 0.2 here is just for illustration, it does not correspond to
+#       any particular value of alpha.
+
+ax.set_xlim(-0.3, 0.3)
+ax.fill_between(x, pdf, 0, 
+                where=( (-0.2 <= x) * (x <= 0.2) ), color="red", alpha=0.2)
+ax.text(-0.04, 1.5, "0.95", fontsize=35, color="red")
+ax.set_xticks([]);
+
+```
+
+```python
+# plot shaded area underneath distribution curve
+
+fig, ax = plt.subplots(1, figsize=(10, 4))
+
+ax.plot(x, pdf, linewidth=3)
+
+# Shade under curve
+ax.set_xlim(-0.3, 0.3)
+ax.fill_between(x, pdf, 0, 
+                where=( (-0.2 <= x) * (x <= 0.0) ), color="red", alpha=0.2)
+ax.text(-0.15, 0.6, "0.475", fontsize=35, color="red")
+ax.set_xticks([]);
+
+```
+```python
+ # plot a 25% tail underneatht he distributon curve
+
+ fig, ax = plt.subplots(1, figsize=(10, 4))
+
+ax.plot(x, pdf, linewidth=3)
+
+# Shade under curve
+ax.set_xlim(-0.3, 0.3)
+ax.fill_between(x, pdf, 0, 
+                where=( (x <= -0.2) ), color="red", alpha=0.2)
+ax.text(-0.18, 0.2, "0.025", fontsize=35, color="red")
+ax.set_xticks([]);
+```
+
+
+
