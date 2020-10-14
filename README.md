@@ -31,6 +31,16 @@
 9 - public speaking and job search strategy
 10 - behavioral mock interviews and Salary negotiation
 
+## Normal Imports
+
+```python
+import numpy as np
+import scipy as sp
+import scipy.stats as stats
+import matplotlib.pyplot as plt
+
+plt.style.use('ggplot')
+```
 
 
 
@@ -1027,6 +1037,7 @@ Shape of a matrix is the number of rows and number of columns
 
 #### Normal Distribution (Gauissian)
 * primary importance in probability and stats theory due to the Central Limit theorem.
+* how to calculate mu for a nomral distribution : (N * P)
 
 #### Exponential Distribution
 * contionous distribution related to the Poisson distribution
@@ -1355,3 +1366,8 @@ def minus_log_likelihood_normal_two_parameters(mu, sigma):
 # The optimizer needs a function that consumes a single numpy array
 def wrapper_for_scipy(x):
     return minus_log_likelihood_normal_two_parameters(x[0], x[1])
+```
+
+### Hypothesis testing
+
+* [link to Jupyer notebook on hypothesis testing](http://localhost:8888/notebooks/hypothesis-testing.ipynb)
