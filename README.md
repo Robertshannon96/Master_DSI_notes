@@ -15,13 +15,31 @@
 * [Pandas syntax page](https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.html)
 
 
+-----------------------------------------------------
+
+## Career services
+
+* [Deliverables Dashboard](https://docs.google.com/spreadsheets/d/12de6aB2Yx0S47aQZsFyVX4xf1hBwftkaWRikw19mRWQ/edit#gid=1543183776)
+
+
+2 - intro to career serviecs
+3 - linkedin
+5 - resumes
+6 - inortmational interviews
+7 - professional introductions & building rapport
+8 - cover letters and interview prep
+9 - public speaking and job search strategy
+10 - behavioral mock interviews and Salary negotiation
+
+
+
+
+
 
 --------------------------------------------
 ## Del, Topics to study each night
 * Pandas Data frames
 * Stats Quest for breakdown of stats concepts
-
-
 
 
 -----------------------
@@ -1015,6 +1033,20 @@ Shape of a matrix is the number of rows and number of columns
 * How much time will it take to observe the first event.
 * ex : Students arrive at a local bar and restaurant at a mean rate of 1 student every 10 minutes. What is the probability that the next student will enter the bar within the next 5 minutes?
 
+
+
+
+
+
+* distribution paramaters
+```python
+# paramaters for different distributions
+binomial_samp = make_draws(stats.binom, {'n': 100, 'p':0.1})
+poisson_samp = make_draws(stats.poisson, {'mu' : 2})
+exponential_samp = make_draws(stats.expon, {'scale' :2})
+geometric_samp = make_draws(stats.geom, {'p': 0.1})
+```
+
 ----------------------------------------------------------
 
 ## Binomial tests
@@ -1294,5 +1326,32 @@ ax.text(-0.18, 0.2, "0.025", fontsize=35, color="red")
 ax.set_xticks([]);
 ```
 
+#### Maximum likelihood
+
+* The goal is to find the best distribution to fit the data
+* [Maximum Likelihood jupyter notebook](http://localhost:8888/notebooks/maximum-likelihood.ipynb)
 
 
+```python
+# maximum likelihood function
+
+def log_likelihood_normal_one_parameter(mu):
+    normal = stats.norm(mu, 1,0)
+    likelihoods = [normal.pdf(datum) for datum in data]
+    return np.sum(np.log(likelihoods))
+
+def log_likelihood_normal_two_parameters(mu, sigma_sq):
+    normal = stats.norm(mu, np.sqrt(sigma_sq))
+    likelihoods = [normal.pdf(datum) for datum in data]
+    return np.sum(np.log(likelihoods))
+
+
+
+
+
+def minus_log_likelihood_normal_two_parameters(mu, sigma):
+    return -log_likelihood_normal_two_parameters(mu, sigma)
+
+# The optimizer needs a function that consumes a single numpy array
+def wrapper_for_scipy(x):
+    return minus_log_likelihood_normal_two_parameters(x[0], x[1])
