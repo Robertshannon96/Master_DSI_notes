@@ -38,6 +38,7 @@ import numpy as np
 import scipy as sp
 import scipy.stats as stats
 import matplotlib.pyplot as plt
+import pandas as pd
 
 plt.style.use('ggplot')
 ```
@@ -936,6 +937,7 @@ one_dim_scatterplot(data, ax, s=15)
 ```
 
 
+
 ```python
 # The Empirical Distribution function
 def emperical_distribution(x, data):
@@ -1078,7 +1080,12 @@ extreme if the null hypothesis is true
 
 
 * significance level in hypothesis testing - probabiity we would be wrong when assuming the null
-* P value -the probility of seeing something THIS extreme OR MORE assuming the null hypothesis
+* P value -the probility of seeing something AS extreme OR MORE assuming the null hypothesis
+
+
+* Type 1 error -  You reject your null hypothesis when you shouldn't have
+* type 2 error - You fail to reject your null hypothesis when you should have
+
 
 
 1. Can matt land a kick flip 80% of the time?
@@ -1100,6 +1107,34 @@ p = 0.6
 * Probability Density function - something will happend in a given time
 * CDF = integral of the PDF, area under the curve depending what you're looking at. Typically, if looking for whats the probability between the bus arriving 20-30 minutes from now use pDF. Whats the probability of the bus arriving in at least 30 minutes use CDF
 * 
+
+-----------------------------------------
+
+## Statistical Power
+
+* Our ability to detect an affect when we dont have an affect
+
+* ~/Desktop/den-19-dsi/lectures/statistical-power/alex-rose
+
+* The power of our hypothesis test to detect an effect if there actually is one.
+* Given that the true distribution is H1, the probability our test rejects the (false) null hypothesis.
+
+* Significance level - a
+* beta - b
+
+* Higher alpha = higher type 1 error, higher power
+* high effect size = higher power, lower type 2 error
+* higher sample size = higher power, lower type 2 error
+
+
+* Powers of hypothesis out comes --
+    * correct - (1-a)
+    * Type 1 error (False Positive) - (a)
+    * Type 2 error (False negative) - (b)
+    * correct - (1-b)
+
+* Effect size - how far from the mean of the alternate hypothesis si away fromt he mean of the null
+
 
 
 
@@ -1371,3 +1406,36 @@ def wrapper_for_scipy(x):
 ### Hypothesis testing
 
 * [link to Jupyer notebook on hypothesis testing](http://localhost:8888/notebooks/hypothesis-testing.ipynb)
+
+
+
+### Data vizulization lecture
+
+* Types of data
+    * Qualitative vs Quantitative
+        *qualitative: data is descriptive information
+        * Quantitative: Data is numerical information
+    * Discrete vs Continuous
+        * Discrete: Data can only take certain values
+        * Continous: Data can take any value
+    * Other types:
+        * Nominal: Non numeric categories
+        * Ordinal : Numeric data with non-constant or unknown spacing
+        * Interval: Numeric data with uniform spacing
+        * ratio: Interval data with a natural zero
+
+* Scatter plots
+    * data types: Continous, quantitative
+    * Compaing an x variable to an Y variable
+    * used to observe relationships between variables
+
+* Line plots:
+    * data types: continous, quantitive, interval, ordinal
+    * Contstructed of lines connecting points called "markers"
+
+* Histograms:
+    * data types: Continous, Quantitiative
+    * Create bins to separate the data, convention says that each bin is left inclusive, right exclusive
+    * A comon function to calc number of bins is k = sqrt(n)
+    * where k is the number of bins and n is the sample size
+    
