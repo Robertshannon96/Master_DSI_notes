@@ -35,16 +35,12 @@
 
 ```python
 import numpy as np
-import scipy as sp
 import scipy.stats as stats
 import matplotlib.pyplot as plt
 import pandas as pd
 
 plt.style.use('ggplot')
 ```
-
-
-
 
 
 --------------------------------------------
@@ -62,6 +58,51 @@ plt.style.use('ggplot')
 * To use bullet point use '*'
 * To make a code block use ' ``` '
 * Images - !['title of image']('link to image')
+
+-----------------------------------------
+## Week 2 Student review
+
+1. What distribution would you use in the following cases:
+
+What is the probability that the mean volume of 50 bottles is less than 500 ml?
+Normal distribution
+
+Deciding to go for a run or not.
+Bernouli
+
+Determining how many days pass before you finally decide to go for a run.
+Hypergeometric Distribution
+
+Determining how likely it is that you go for 10 runs in a month.
+Binomial
+
+Calculating which day of the month you buy new shoes.
+Possibly uniform, as it could be completely random giving the lack of information provided. Could be geometric as well.
+
+Assuming you run at a 9 minute mile avg pace, determining how likely it is that you pass the 3 mile mark in a race in 25 minutes?
+
+Poisson. 
+
+
+2. What is the central limit theorem?
+The central limit theorem allows us to make probabilistic statements about the sample mean from any population using the normal distribution.
+
+3. A bootstrap sample from a sataset is a sample taken with REPLACEMENT from the data set whose size is the size of the dataset itself. 
+
+4. Here are the numbers in a list:
+[3, 4, 5, 7, 8, 10, 12, 13, 14, 15, 16, 18, 19, 21, 22, 23, 24, 25, 26, 31, 42, 60, 69, 86, 108, 256]
+
+For this list:
+a) Find a 90% confidence interval for the mean using the Central Limit Theorem.
+
+def confidence_interval(mean, st_err, num_std):
+    ci = [mean - num_std * st_err, mean + num_std * st_err]
+    return [round(val, 3) for val in ci
+
+b) Find a 90% confidence interval for the mean using bootstrapping.
+c) Find a 68% confidence interval for the standard deviation using the Central Limit Theorem.
+d) Find a 68% confidence interval for the standard deviation using bootstrapping.
+e) Either a), b), c) or d) is a trick question. Which one is it, and why?
 
 
 -----------------------
@@ -1018,7 +1059,10 @@ Shape of a matrix is the number of rows and number of columns
 * parameters = n,p where n is the number of trials and p is the probability
 
 #### Hypergeometric Distribution
-* another counting distribution. This one models a deck of cards of two types(red/blue). If you shuffle the deck, draw some number of cards, and then count how many blue cards you have, this count is hyper geometrically distributed.
+* another counting distribution. The probability that a succes will occuron or before the case trial. 
+
+ex: This one models a deck of cards of two types(red/blue). If you shuffle the deck, draw some number of cards, and then count how many blue cards you have, this count is hyper geometrically distributed.
+
 
 * parameters = n- total sample size          k = total number of blue cards in deck    n = size of the hand you drew
 
@@ -1183,7 +1227,7 @@ one_dim_scatterplot(data, ax, s=15)
 ax = plt.subplot2grid((6, 3), (0, 2), colspan=1)
 text_in_blank_plot("Original Sample", ax)
 
-## boostrapping 5 times
+# boostrapping 5 times
 for i in range(0, 5):
     bootstrap_sample = np.random.choice(data, size=len(data), replace=True)
     ax = plt.subplot2grid((6, 3), (i + 1, 0), colspan=2)
@@ -1197,7 +1241,7 @@ for i in range(0, 5):
 
 ```
 ```python
-#function to define bootstrap medians
+# function to define bootstrap medians
 def bootstrap_sample_medians(data, n_bootstrap_samples=10**4):
     bootstrap_sample_medians = []
     for i in range(n_bootstrap_samples):
@@ -1266,6 +1310,7 @@ print("Bootstrap Confidence Interval for Population 75'th Percentile: [{:2.2f}, 
 ```python
 # how to find the midde 95% of the distribution
 # how to plot vertical distribution lines
+# how to find 95% confidence level
 
 
 mu = 2 # mean
@@ -1439,3 +1484,64 @@ def wrapper_for_scipy(x):
     * A comon function to calc number of bins is k = sqrt(n)
     * where k is the number of bins and n is the sample size
     
+
+
+### Bayesian lecture
+
+* Prior Probability - A PMF / PDF representing you intital beliefs about the parameter(s)
+* Likelihood - The probability of observing the data given the parameter(s)
+* Posterior propability - The product of prior and likelihood (bayesian-update)
+                        - the posterior probability becomes the prior of the next update
+* Normalizing constand - the probability of observing the data. 
+* What is baye's rule
+    * P(A|B) = P(B|A)P(A) / P(B)
+
+```python
+
+# function to flip a coin
+def flip_the_coin(p, flips_lst):
+    '''Flips the coin with probability of success p
+       and appends to the flips_lst'''
+    if np.random.random() <= p:
+        flips_lst.append(1) #heads (success)
+    else:
+        flips_lst.append(0) #tails (failure)
+
+# function to calculate likelihood / how to calculate likelihood
+
+def calculate_likelihood(flips_lst):
+    '''Likelihood of the last flip in the flips_lst given fair, not fair coin'''
+    result = flips_lst[-1]
+    likelihood_fair = stats.bernoulli.pmf(result, p_fair)
+    likelihood_not_fair = stats.bernoulli.pmf(result, p_not_fair)
+    return [likelihood_fair, likelihood_not_fair]
+
+# how to calculate marginal / function to calculate marginal
+
+def calculate_marginal(likelihoods_lst, prior_lst):
+    prior_fair = prior_lst[0]
+    prior_unfair = prior_lst[1]
+    likelihood_fair = likelihoods_lst[0]
+    likelihood_not_fair = likelihoods_lst[1]
+    marginal = likelihood_fair * prior_fair + likelihood_not_fair * prior_unfair
+    return marginal
+
+# function to calculate posterior / how to calculate posterior
+
+def calculate_posterior(likelihoods_lst, prior_lst):
+    '''Calculates the posterior given the likelihoods and prior'''
+    marginal = calculate_marginal(likelihoods_lst, prior_lst)
+    posterior_unnormalized = []
+    for likelihood, prior in zip(likelihoods_lst, prior_lst):
+        posterior_unnormalized.append(likelihood * prior / marginal)
+    # now need to normalize so that the total probability in posterior is 1
+    posterior_un_total = sum(posterior_unnormalized)
+    posterior_lst = []
+    for posterior in posterior_unnormalized:
+        posterior_lst.append(posterior/posterior_un_total)
+    return posterior_lst
+
+
+
+
+
