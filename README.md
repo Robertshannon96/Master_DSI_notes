@@ -64,24 +64,22 @@ plt.style.use('ggplot')
 
 1. What distribution would you use in the following cases:
 
-What is the probability that the mean volume of 50 bottles is less than 500 ml?
-Normal distribution
+What is the probability that the mean volume of 50 bottles is less than 500 ml? Normal distribution
 
-Deciding to go for a run or not.
-Bernouli
+Deciding to go for a run or not. Bernouli
 
-Determining how many days pass before you finally decide to go for a run.
-Hypergeometric Distribution
+Determining how many days pass before you finally decide to go for a run. Hypergeometric Distribution
 
-Determining how likely it is that you go for 10 runs in a month.
-Binomial
+Determining how likely it is that you go for 10 runs in a month. Binomial
 
-Calculating which day of the month you buy new shoes.
-Possibly uniform, as it could be completely random giving the lack of information provided. Could be geometric as well.
+Calculating which day of the month you buy new shoes. Possibly uniform, as it could be completely random giving the lack of information provided. Could be geometric as well.
 
 Assuming you run at a 9 minute mile avg pace, determining how likely it is that you pass the 3 mile mark in a race in 25 minutes?
 
-Poisson. 
+Poisson.
+
+
+
 
 
 2. What is the central limit theorem?
@@ -321,6 +319,8 @@ pd.merge(red_wines_quality_df, white_wines_quality_df, on=['quality'], suffixes=
 ```python
 # Reading in data with pandas/ reading external data/ import data
 df = pd.read_csv('my_data.csv')
+data = np.loadtxt('my_data.csv)
+
 
 # if no header name
 df = pd.read_csv('my_data.csv', header=None)
@@ -1541,7 +1541,98 @@ def calculate_posterior(likelihoods_lst, prior_lst):
         posterior_lst.append(posterior/posterior_un_total)
     return posterior_lst
 
+```
 
+## **Types of Data**  
 
+**Qualitative**: Descriptive information  
+**Quantitative**: Numerical Information  
+**Discrete**: Data can only take on certain values (int)  
+**Continuous**: Data can take any value (float)  
+**Nominal**: Non-numeric categories (brand)  
+**Ordinal**: Numeric data with non-constant or unknown spacing (t-shirt sizes)  
+**Interval**: Numeric data with uniform spacing (date)  
+**Ratio**: Interval data with a natural zero  
 
+![Graphing Order of Importance based on Data Type](images/data_visualization.png)
 
+## **Types of Plots and when to use them:**  
+
+**Scatter**:  
+Data Types: Continuous, Quantitative  
+Comparing an X variable to a Y variable  
+Used to observe relationships between variables  
+
+**Line Plots**:  
+Data Types: Continuous, Quantitative, Interval, Ordinal  
+Constructed of lines connecting points called “markers”  
+X-axis is ordinal or interval in nature, like a time series  
+
+**Histograms**:  
+Data Types: Continuous, Quantitative  
+Creates “bins” to separate the data, convention says that each ‘bin’ is left inclusive, right exclusive  
+Can show the overall distribution of the data  
+Right Skewed - tail goes to the right (left is opposite)  
+To calculate the proper number of bins: `#_bins = sqrt(n_samples)`  
+
+**Kernel Density Plot**  
+Can show the overall distribution of the data on a continuous interval allowing for smoother distributions by smoothing the noise  
+
+**Bar Chart**:  
+Data Types: All  
+Used to represent the same variable over a number of domains  
+Can show frequency distributions for discrete variables  
+Should be sorted in order if x-labels are not ordinal  
+
+**Box Plot**:  
+Data Types: Continuous, Quantitative  
+Used to visually represent the five number summary  
+Can show the distribution's skew  
+Can visually represent outliers  
+
+**Violin Plot**  
+Similar to box plot, but adds in the kernel density plot in each side (shows the distribution shape)  
+Shows the summary statistics in the plot as well  
+
+**Pie Chart**  
+Useless  
+
+**Heat Maps**  
+Visually represent a matrix  
+Typically used to show covariance and correlation  
+
+## One Dimensional Scatterplot
+```python
+def one_dim_scatterplot(data, ax, jitter=0.2, **options):
+    ## why jitter? especially for bootstraping
+    if jitter:
+        jitter = np.random.uniform(-jitter, jitter, size=data.shape)
+    else:
+        jitter = np.repeat(0.0, len(data))
+    ax.scatter(data, jitter, **options)
+    ax.yaxis.set_ticklabels([])
+    ax.set_ylim([-1, 1])
+    ax.tick_params(axis='both', which='major', labelsize=15)
+
+fig, ax = plt.subplots(1, figsize=(12, 1))
+one_dim_scatterplot(data, ax, s=15)
+```
+![One Dimension Scatterplot](images/one_dimension_scatter_plot.png) 
+
+## Empirical Distribution Plot
+
+```python
+def empirical_distribution(x, data):
+    '''Cumulative distribution for the data'''
+    weight = 1.0 / len(data)
+    count = np.zeros(shape=len(x))
+    for datum in data:
+        count = count + np.array(x >= datum)
+    return weight * count
+```
+
+# STATS and PROBABILITY
+
+[Seeing Theory - Visualize Concepts](https://seeing-theory.brown.edu/basic-probability/index.html)  
+
+# Probability Distributions
