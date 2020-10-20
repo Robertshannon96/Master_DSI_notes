@@ -1635,4 +1635,115 @@ def empirical_distribution(x, data):
 
 [Seeing Theory - Visualize Concepts](https://seeing-theory.brown.edu/basic-probability/index.html)  
 
-# Probability Distributions
+## Docker lecture
+* An open source project based on Linux containers
+* A docker container is a stand-alone piece of doftware that includes everything needed to run it,
+
+* Couple of commands
+    * docker build
+    * docker run
+    * docker start
+    * docker stop
+    * docker pull
+    * docker push
+
+## Sql Lecture
+* RDBMS (relational Database Management system)
+    * Schema - defines the structure of a table or database
+    * Databaseis composed of a number of user-defined tables
+    * Each table has columns and rows
+
+
+* Sql Query Basics
+    * SELECT - What data columns do you want
+    * FROM - From what location do you want it
+    * WHERE - What data (rows) do you want
+
+
+* Order of operations sql
+    * SELECT
+    * FROM
+    * JOIN / ON
+    * WHERE
+    * GROUP BY
+    * HAVING
+    * ORDER BY
+    * LIMIT 
+    * ;
+
+# how to start up docker
+$ docker start pgserv
+
+$ docker exec -it pgserv bash
+-# cd /home/data/path/to/data_dump/
+-# psql -U postgres      <--- THIS ONE IS IMPORTANT
+=# CREATE DATABASE new_database;
+=# \q
+-# psql -U postgres new_database < really_important.sql;
+-# psql -U postgres new_database
+=# \d
+=# SELECT * FROM critical_table LIMIT 13;
+
+
+
+### Some postgres commands
+* \l - lists all databases
+* \d - list all tables
+* \d <tablename> - describe a table schema
+* \h <clause> help for sql clause help
+* q - exit current view and return to command line
+* \q - quit sql
+* \i script.sql - run script(or query)
+
+#### SQL python lecture
+
+* General Workflow
+1. Establish a connection to Postgres database using psycopg2
+2. Create a cursor
+3. Use the cursor to execute SQL queries and retrieve data
+4. Commit SQL actions
+5. Close the cursor and connection
+
+```python
+# Connect to the database
+import psycopg2
+import getpass
+
+upass = getpass.getpass()
+conn = psycopg2.connect(database="golf", user="ender", password=upass, host="localhost", port="5432")
+print("connected")
+```
+
+```python 
+# instantiate the cursor
+cur = con.cursor()
+
+# populate the database
+run populate.py
+```
+
+```python
+# look athe data one line at a time
+cur.fetchone()
+
+# many lines at a time
+cur.fetchmany(5)
+
+# or everything at once
+resulults = cur.fetchall()
+
+# how to iterate over a cursor
+cur.execute(query)
+for record in cur:
+    print("data;{}, outlook:{}".format(record[0], record[1]))
+
+# or another way
+for row in cur
+    print(row)
+
+```
+
+```python
+# using pandas with sql
+df = pd.read_sql(query, conn)
+
