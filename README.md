@@ -1646,6 +1646,7 @@ def empirical_distribution(x, data):
     * docker stop
     * docker pull
     * docker push
+------------------------------------------------------------
 
 ## Sql Lecture
 * RDBMS (relational Database Management system)
@@ -1694,6 +1695,8 @@ $ docker exec -it pgserv bash
 * q - exit current view and return to command line
 * \q - quit sql
 * \i script.sql - run script(or query)
+------------------------------------------------------------------------
+
 
 #### SQL python lecture
 
@@ -1746,4 +1749,347 @@ for row in cur
 ```python
 # using pandas with sql
 df = pd.read_sql(query, conn)
+```
 
+--------------------------------------------------------
+### Algorithmic Time complexity lecture
+* Big-o Notation: used to describe how the runtime (time complexity) and size (space complexity) of an algorithim increases as the size of the input array of the length N increases.
+
+#### TIME complexity (best to worst)
+* O(1) Constant - only a single step required to complete the task.
+* O(log n) - Logarithmic - The number of steps it takes to accomplish the task are decreased by some factor with each step.
+* O(n) - Linear - The number of steps required is directly related to n.
+* O(n log n) - Log linear - The number of steps required is directly related to n multiplied by some factor that is a factor of n (but not much less than n)
+* O(n^2) - Quadratic - The number of steps it takes to accomplish a task is square of n (BAD).
+* O(C^N) - Exopential - The number of steps it takes to accomplish a task is a constant to the n power (VERY BAD)
+
+#### Types of sorts
+* Bubble sorts: large values bubble to the top. Pretty dang slow
+```python
+# psudo code for bubble sort
+# O(n^2)
+
+def bubbleSort(lst):
+    for i in range(len(lst) -1, 1, -1):
+        for j in range(j):
+            if alist[j] > alist[j+1]:
+                swap alist[j] and alist[j+1]
+```                
+* Insertion sort: The idea is that you keep one part of the last sorted as we go. O(n^2)
+```python
+# psudo code for insertion Sort
+def insertionSort(lst):
+    for i in range(1, len(lst)):
+        val = lst[i]
+        while i >0 and lst[i-1] > val:
+            move lst[i-1] to the right
+            decrement i
+        assign val to lst[i]
+```
+
+----------------------------------------------
+
+### Mongo DB lecture
+* MongoDB is a document-oriented database, an alternative to RDBMS, used for storing semi-structured data.
+* JSON like objects from the data model, rather than a RDBMS tabkes.
+* Structure of the data base:
+    * MongoDB is made up of databases which contain collections
+    * A collection is made up of documents
+
+* Querying data
+```SQL
+db.unicorns.find()
+find is much more flexible.
+
+// find by single field
+db.unicorns.find({name: 'TwilightSparkle'})
+
+// find by presence of field
+db.unicorns.find({friends: {$exists : true}})
+
+// find by value in array
+db.unicorns.find({friends: 'TwilightSparkle'})
+
+// To return only certain fields use the optional second argument to `find`.
+// This says, return only the names of unicorns who are friends with
+// twilight sparkle.
+db.unicorns.find({friends: 'TwilightSparkle'}, {name: true})
+```
+
+* Updating data with mongo
+
+```SQL
+// Replaces friends array
+db.unicorns.update({
+    name: 'TwilightSparkle'}, {
+    $set: {
+        friends: ['Shutterfly', 'Rarity', 'Applejack']}})
+
+// Adds to friends array
+db.unicorns.update({
+    name: 'Applejack'}, {
+    $push: {
+        friends: 'Rarity'}})
+We have to use the $set and $push operators, the default behaviour of update is to replace the data.
+
+// Replaces the TwighlightSparkle data completely!
+// It will no longer have even a name field after this!
+db.unicorns.update({
+    name: 'TwilightSparkle'}, {
+    friends: ['Shutterfly', 'Rarity', 'Applejack']})
+An upsert either creates a document (when it does not already exist) or inserts into an existing document.
+
+// Upsert: This one is created
+db.unicorns.update({
+    name: "Rarity"}, {
+    $push: {
+        friends: {
+            $each: ["TwilightSparkle", "Applejack", "Fluttershy"]}}}, {
+    upsert: true})
+
+// Upsert: This one is updated
+db.unicorns.update({
+    name: "Fluttershy"}, {
+    $push: {
+        friends: {
+            $each: ["Rarity", "PrincessCelestia"]}}}, {
+    upsert: true})
+```
+* Upsert in mongo
+    * if the record exists, were going to update the record with new info. If it dosent exist, its going to create a new record with the new provided info
+
+* how to remove data in mongo
+```SQL
+db.unicorns.remove({name: "Fluttershy"})
+```
+
+-------------------------------------------
+
+### Web scraping lecture
+
+* important html tags
+
+```html
+<a href="http://www.w3schools.com">A hyperlink to W3Schools.com!</a>
+
+<h1>This is a header!</h1>
+
+<p>This is a paragraph!</p>
+
+<h2>This is a Subheading!</h2>
+
+<table>
+  This is a table!
+  <tr>
+    <th>The header in the first row.</th>
+    <th>Another header in the first row.</th>
+  </tr>
+  <tr>
+    <td>An entry in the second row.</td>
+    <td>Another entry in the second row.</td>
+  </tr>
+</table>
+
+<ul>
+  This is an unordered list!
+  <li>This is the first thing in the list!</li>
+  <li>This is the second thing in the list!</li>
+</ul>
+<div>Specifies a division of the document, generally with additional attributes specifying layout and behavior.</div>
+A <span>span is similar</span> but occurs in the middle of a line.
+```
+* Web vs Internet : Internet came first. 
+    * Internet includes things like : email, SSH. Really just a series of protocols
+
+* HTTP Requests
+    * To get data from the web, you need to make a HTTP request. The two most important request types are:
+
+* GET (queries data, no data is sent)
+* POST (updates data, data must be sent)
+
+
+
+#### Steps when scraping a website
+
+1. Check out the website in a browser
+    * right click inspect, find the right tags
+
+2. Send a GET request for the data
+
+    ```python
+     deer_tier_url = 'http://deertier.com/Leaderboard/AnyPercentRealTime'
+    r = requests.get(deer_tier_url)
+    r.status_code
+    r.content
+    ```
+3. Save all the hypter text into mongo for later use
+
+    ```python
+    client = MongoClient('localhost', 27017)
+    db = client.metroid
+    pages = db.pages
+
+    pages.insert_one({'html': r.content})
+    ```
+
+4. Parse the hypertext in BeautifulSoup
+
+    ```python
+    soup = BeautifulSoup(r.content, 'html')
+    print(soup)
+    print(soup.prettify())
+    print(soup.title)
+5. navigate the data to pull out the table information you want
+
+```python
+div = soup.find("div", {"class": "scoreTable"})
+table = div.find("table")
+
+# This returns an iterator over the rows in the table.
+rows = table.find_all("tr")
+
+all_rows = []
+
+# Let's store each row as a dictionary 
+empty_row = {
+    "rank": None, "player": None, "time": None, "comment": None
+}
+
+# The first row contains header information, so we are skipping it.
+for row in rows[1:]:
+    new_row = copy.copy(empty_row)
+    # A list of all the entries in the row.
+    columns = row.find_all("td")
+    new_row['rank'] = int(columns[0].text.strip())
+    new_row['player'] = columns[1].text.strip()
+    new_row['time'] = columns[2].text.strip()
+    new_row['comment'] = columns[4].text.strip()
+    all_rows.append(new_row)    
+
+pprint.pprint(all_rows[:4])
+```
+
+6. Load all the rows into a mongo database
+
+```python
+db = client.metroid
+deer_tier = db.deer_tier
+for row in all_rows:
+    deer_tier.insert_one(row)
+```
+7. Load all the rows into a pandas dataframe
+
+```python
+rows = deer_tier.find()
+super_metroid_times = pd.DataFrame(list(rows))
+
+uper_metroid_times.head()
+
+super_metroid_times = super_metroid_times.drop("_id", axis=1)
+super_metroid_times = super_metroid_times.set_index("rank")
+super_metroid_times.head()
+```
+-------------------------------------------
+
+#### How to use an API to scrape (wikipedia page)
+
+```python
+import json
+import re
+
+# The `User-Agent` section of a HTTP header contains this information.Wikipedia wants us to identify ourselves before it will give us data
+
+headers = {'User-Agent': 'GalvanizeDataWrangling/1.1 matthew.drury@galvanize.com'}
+
+api_url = 'https://en.wikipedia.org/w/api.php'
+
+# Parameters for the API request: We want the Unicorn page encoded as json.
+payload = {'action': 'parse', 'format': 'json', 'page': "Unicorn"}
+
+r = requests.post(api_url, data=payload, headers=headers)
+
+print(r.json().keys())
+```
+
+```python
+# STEP 2: STORE THE DATA IN MONGODB
+# import MongoDB modules
+from pymongo import MongoClient
+from bson.objectid import ObjectId
+
+# connect to the hosted MongoDB instance
+client = MongoClient('localhost', 27017)
+db = client.wikipedia
+
+collection = db.wikipedia
+
+if not collection.find_one(r.json()['parse']):
+    collection.insert_one(r.json()['parse'])
+
+unicorn_article = collection.find_one({ "title" : "Unicorn"})
+
+pprint.pprint(unicorn_article)
+
+print (unicorn_article.keys())
+```
+
+```python
+# STEP 3: Retrieve and store every article with associated metadata within on link
+
+links = unicorn_article['links']
+
+pprint.pprint(links)
+
+len(links)
+
+for link in links:
+
+    payload = {'action': 'parse' ,'format': 'json', 'page' : link['*'] }
+    r = requests.post(api_url, data=payload, headers=headers)
+
+    # check to first see if the document is already in our database, if not, store it.
+    try:
+        j = r.json()
+        if not collection.find_one(j['parse']):
+            print("Writing The Article: {}".format(j['parse']['title']))
+            collection.insert_one(j['parse'])
+    except Exception as e:
+        print(e)
+```
+
+```python
+# Find all articles that mention 'Horn' or 'Horned'
+
+# compile our regular expression since we will use it many times
+regex = re.compile(' Horn | Horned ', re.IGNORECASE)
+
+with open('wiki_articles.txt', 'w') as out:
+
+    for doc in collection.find():
+        
+        # Extract the HTML from the document
+        html = doc['text']['*']
+
+        # Stringify the ID for serialization to our text file
+        doc['_id'] = str(doc['_id'])
+
+        # Create a Beautiful Soup object from the HTML
+        soup = BeautifulSoup(html)
+
+        # Extract all the relevant text of the web page: strips out tags and head/meta content
+        text = soup.get_text()
+
+        # Perform a regex search with the expression we compiled earlier
+        match = regex.search(text)
+
+        # if our search returned an object (it matched the regex), write the document to our output file
+        if match:
+            try:
+                print("Writing Article: {}".format(doc['title']))
+                json.dump(doc, out) 
+                out.write('\n')
+            except UnicodeEncodeError as e:
+                print(e)
+
+    out.close()
+```
