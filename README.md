@@ -2093,3 +2093,219 @@ with open('wiki_articles.txt', 'w') as out:
 
     out.close()
 ```
+
+
+----------------------------------------------------------
+
+### Spark lecture
+
+* Hadoop - opensource framework made to handle big data through distributed computing
+* RDD - Resilient distributed datasets
+    * created from HDFS, S3, Hbase, JSON, text, local
+    * Distrbiuted across the cluster as partitions
+    * Can recover from erroes (node failure, slow process)
+    * Traceability of each partition, can re-run the processing
+    * IMMUTABLE - You cannot modify an RDD in place
+    * Lazily evaluated - builds the plan but dosent exectute 
+    * Cachable
+
+* RDD Transformations
+    - rdd.filter
+        * applies a function to each element. Return elements that evaluate to true
+    - rdd.map
+        * Transforms each element. Preserves # of elements
+    - rdd.flatMap
+        * transforms each elements into O-N elements.
+            - ex: paragraph of words ("mary had a little lamda") to individual words.
+
+
+
+
+
+-------------------------------------------------
+
+### Spark self directed notebook
+
+```python
+import pyspark as ps
+```
+
+
+```python
+# paralleize in spark
+# reading the array/list using SparkContext
+rdd = sc.parallelize(data_array)
+
+# print in spark
+rdd.collect()
+
+# open a text file in spark
+# displaying the content of the file in stdout
+with open('data/toy_data.txt', 'r') as fin:
+    print(fin.read())
+
+# reading the file using SparkContext
+rdd = sc.textFile('data/toy_data.txt')
+
+# to output the content in python [irl, use collect() with great care]
+rdd.collect()
+
+
+# pickle in spark
+# reading the file using SparkContext
+rdd = sc.pickleFile('data/toy_data.pkl')
+
+# to output the content in python [irl, use with great care]
+rdd.collect()
+
+
+# creating RDDs from s3
+# link to the S3 repository
+
+#link = 's3a://mortar-example-data/airline-data'
+#rdd = sc.textFile(link)
+
+rdd = sc.textFile('data/airline-data-extract.csv')
+
+# applies split() to each row
+rdd2 = rdd1.map(lambda rowstr : rowstr.split())
+
+rdd2.collect()
+
+# filters rows
+rdd3 = rdd2.filter(lambda row: not row[0].startswith('#'))
+
+rdd3.collect()
+
+def casting_function(row):
+    id, date, store, state, product, amount = row
+    return((int(id), date, int(store), state, int(product), float(amount)))
+
+# applies casting_function to rows
+rdd4 = rdd3.map(casting_function)
+
+# shows the result
+rdd4.collect()
+
+# Now all of that in one row! Pretty sweet if i do say
+def casting_function(row):
+    id, date, store, state, product, amount = row
+    return((int(id), date, int(store), state, int(product), float(amount)))
+
+rdd_sales = sc.textFile('data/sales.txt')\
+        .map(lambda rowstr : rowstr.split())\
+        .filter(lambda row: not row[0].startswith('#'))\
+        .map(casting_function)   # <= JUST ADDED THIS HERE
+
+rdd_sales.collect()
+
+# .map(func) in spark
+# applying a lambda function to an rdd
+rddout = rdd_names.map(lambda x : len(x[0]))
+
+# print out the original rdd
+print("before: {}".format(rdd_names.collect()))
+
+# print out the new rdd generated
+print("after: {}".format(rddout.collect()))
+before: [['matthew', 4], ['jorge', 8], ['josh', 15], ['evangeline', 16], ['emilie', 23], ['yunjin', 42]]
+after: [7, 5, 4, 10, 6, 6]
+
+
+# .flatmap(func) in spark
+# applying a lambda function to an rdd (because why not)
+rddout = rdd_names.flatMap(lambda row : [row[1], row[1]+2, row[1]+len(row[0])])
+
+# print out the original rdd
+print("before: {}".format(rdd_names.collect()))
+
+# print out the new rdd generated
+print("after: {}".format(rddout.collect()))
+before: [['matthew', 4], ['jorge', 8], ['josh', 15], ['evangeline', 16], ['emilie', 23], ['yunjin', 42]]
+after: [4, 6, 11, 8, 10, 13, 15, 17, 19, 16, 18, 26, 23, 25, 29, 42, 44, 48]
+
+# .filter(func) in spark
+# filtering an rdd
+rddout = rdd_sales.filter(lambda row: (row[3] == 'CA'))
+
+# print out the original rdd
+print("before: {}".format(rdd_sales.collect()))
+
+# print out the new rdd generated
+print("after: {}".format(rddout.collect()))
+before: [(101, '11/13/2014', 100, 'WA', 331, 300.0), (104, '11/18/2014', 700, 'OR', 329, 450.0), (102, '11/15/2014', 203, 'CA', 321, 200.0), (106, '11/19/2014', 202, 'CA', 331, 330.0), (103, '11/17/2014', 101, 'WA', 373, 750.0), (105, '11/19/2014', 202, 'CA', 321, 200.0)]
+after: [(102, '11/15/2014', 203, 'CA', 321, 200.0), (106, '11/19/2014', 202, 'CA', 331, 330.0), (105, '11/19/2014', 202, 'CA', 321, 200.0)]
+
+# .sample(withReplacement, fraction, seed) in spark
+# sampling an rdd
+rddout = rdd_sales.sample(True, 0.4)
+
+# print out the original rdd
+print("before: {}".format(rdd_sales.collect()))
+
+# print out the new rdd generated
+print("after: {}".format(rddout.collect()))
+
+# .distinct() how to obtain distinct rows in spark
+# obtaining distinct values of the "state" column of rdd_sales
+rddout = rdd_sales.map(lambda row: row[3])\
+                    .distinct()
+
+# print out the original rdd
+print("before: {}".format(rdd_sales.collect()))
+
+# print out the new rdd generated
+print("after: {}".format(rddout.collect()))
+before: [(101, '11/13/2014', 100, 'WA', 331, 300.0), (104, '11/18/2014', 700, 'OR', 329, 450.0), (102, '11/15/2014', 203, 'CA', 321, 200.0), (106, '11/19/2014', 202, 'CA', 331, 330.0), (103, '11/17/2014', 101, 'WA', 373, 750.0), (105, '11/19/2014', 202, 'CA', 321, 200.0)]
+after: ['CA', 'WA', 'OR']
+
+
+#rddA.join(rddB) how to join two RDD's in spark
+rdd_salesperstate = rdd_sales.map(lambda row: (row[3],row[5]))
+
+rdd_salesperstate.collect()
+# creating an adhoc list of managers for each state
+data_array = [['CA', 'matthew'],
+              ['OR', 'jorge'],
+              ['WA','matthew'],
+              ['TX', 'emilie']]
+
+# reading the array/list using SparkContext
+rdd_managers = sc.parallelize(data_array)
+
+# to output the content in python [irl, use with great care]
+rdd_salesperstate.join(rdd_managers).collect()
+
+# .groupByKey(func) how to group by a key in spark
+def mean(args):
+    key,iterator = args
+    total = 0.0; count = 0
+    for x in iterator:
+        total += x; count += 1
+    return total / count
+
+rdd.groupByKey()\
+    .map(mean)\
+    .collect()
+
+
+# .sortByKey() in spark
+# sorting k,v pairs by key
+rddout = rdd_names.sortByKey(ascending=False)
+
+# print out the original rdd
+print(rdd_names.collect())
+
+# print out the new rdd generated
+print(rddout.collect())
+
+
+.collect()	action	Return a list that contains all of the elements in this RDD. Note that this method should only be used if the resulting array is expected to be small, as all the data is loaded into the driver’s memory.
+.count()	action	Return the number of elements in this RDD.
+.take(n)	action	Take the first n elements of the RDD.
+.top(n)	action	Get the top n elements from a RDD. It returns the list sorted in descending order.
+.first()	action	Return the first element in a RDD.
+.sum()	action	Add up the elements in this RDD.
+.mean()	action	Compute the mean of this RDD’s elements.
+.stdev()	action	Compute the standard deviation of this RDD’s elements.
+```
