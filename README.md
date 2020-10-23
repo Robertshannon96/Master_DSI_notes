@@ -102,6 +102,192 @@ c) Find a 68% confidence interval for the standard deviation using the Central L
 d) Find a 68% confidence interval for the standard deviation using bootstrapping.
 e) Either a), b), c) or d) is a trick question. Which one is it, and why?
 
+-------------------------------------------------------------------------------------------------------------------
+
+## Week 3 Review questions
+1. Estimate the run-time complexity (O(N) notation) of the following code:
+  ```python
+  def find_duplicates(l1, l2):
+    '''
+    searches through lists 1 and 2 and eliminates duplicate entries from list 2
+    '''
+    for item1 in l1:
+      for item2 in l2:
+        if item2 == item1:
+          # removes item from list
+          l2.remove(item2)
+    return l1, l2     
+
+  ```
+ A) The run time complexity here would be O(N^2), this is because of the nested for loop
+ 
+
+  Write another function with the same functionality that works more efficiently. Use timeit to see how well you can do!
+
+  (Hint: you could use something like
+  ```np.random.randint(0, 100, 50)```
+  to create random lists to practice with)
+
+  ```python
+  def a_better_function():
+    for item in l1:
+        if item1 in l2:
+        l2.remove(item1)
+```
+
+
+
+
+2. Docker has become a common way to deploy applications.  Why is that?  Let's 
+   say you have an application you wish to deploy. What steps would you go through
+   to make your application deployable with Docker?  
+
+    * Create an image
+    * Push image to docker hub once code is complete
+    * from there anyone can pull your image  
+
+    * navigate to your working directory
+    * docker start sparkbook
+    * go to url localhost:88881
+
+
+
+3. As you pair program, your partner puts this in your script:
+
+```python
+   import boto3
+   boto3_connection = boto3.resource('s3')
+
+   AWS_ACCESS_KEY_ID=ZYBGIZH66RA468VYYPCQ
+   AWS_SECRET_ACCESS_KEY=gV97XiVqsSH5YhGAx18m0b/gxJdyH-yXS
+
+   def print_s3_contents_boto3(connection):
+       for bucket in connection.buckets.all():
+           for key in bucket.objects.all():
+               print(key.key)
+
+   print_s3_contents_boto3(boto3_connection)
+```
+
+
+
+
+The code works, but you can't shake a feeling of impending doom.  Why?  What would
+you do to allow the code to work but prevent financial ruin?
+
+* The problem with the above code is that the aws secret key is hard coded into the code so anybody can see them and use your account. You need to imbed them in an object so people can't see them easily 
+
+
+
+
+4. Use datatable 'customers' (example rows below), write a SQL query to....
+
+| cust_id | cust_name | current_city | hometown |
+|:----------:|:------------:|:----------:|:-----------:|
+| 1 | Amanda | Atlanta | Raleigh |
+| 2 | Brittany | Denver | New York |
+| 3 | Charles | Paris | Raleigh |
+| 4 | David | San Diego | Los Angeles |
+| 5 | Elizabeth | Atlanta | London |
+| 6 | Greg | Denver | Atlanta |
+| 7 | Maria | Raleigh | New York |
+| 8 | Sarah | New York | Raleigh |
+| 9 | Thomas | Atlanta | Raleigh |
+
+  **Assume that everyone has moved**
+
+  A) Return the city with the highest population growth. (Highest net of people who currently live there minus people who used to live there)
+        * SELECT COUNT(current_city)
+        * INTO current_city_table
+        * FROM customers
+
+        * SELECT COUNT(hometown)
+        * INTO hometown_table
+        * FROM CUSTOMERS
+
+        * SELECT current_city_table - hometowntable
+        * 
+
+
+    * 2 group by temp tables. One for city one for hometown. Then sum results and joiun them on current city
+
+
+  B) Return pairs of "friends" (can be two columns or a tuple) that have both the same hometown and current city. Remove duplicates!  
+
+
+
+
+5. Compare/contrast SQL and noSQL databases.  
+  * What is one major organizational difference between the two?  
+  * What type of data are ideal for each?  
+    * NoSql is better for large amounts of data that isn't very organized, while SQL is better for data that's already been touched up a bit and generally smaller
+
+  * In SQL, you have tables, rows, and columns.  What are analogous in MongoDB? 
+    * The key-value pairs
+
+
+
+| SQL                           | NoSql                                                                                                                                                                                  |
+|-------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Rigid schema                  | Flexible schema                                                                                                                                                                        |
+| Tables with fixed cols & rows | General purpose, key value: large amount of data with simple lookup queries Wide-column: large amount of data with predictable query patterns, graph: analyzing and traversing reality |
+| Joins required                | Joins not typically required                                                                                                                                                           |
+
+
+
+
+
+
+
+6. What is big data?  Big data are often referred to by 3Vs.  What are they?
+    * Big data is data  (both structured and unstructured) that can't be stored on one machine
+    * 3 v's - High Volume, Velocity Variety
+
+
+
+
+7. Explain the concept of MapReduce in terms a 5th grader would understand. 
+   Provide an illustrative example.
+
+   * Given mixed inputs, map reduce will try to group smaller objects and count them within their own starting node. Then they will transfer those objects to another node to group them wil smaller objects from different starting nodes, again counting the total similar objects. Finally it will combine everything into one node, but now all similiar objects are grouped together with a total count for each object. 
+
+
+
+
+8. What differentiates a Spark RDD from data stored in a single file (e.g. a .csv)?  
+
+    * Spread across multiple computers. Distributed computing.
+
+
+9. What is the difference between a Spark RDD and a Spark Dataframe?  
+    Spark Dfs have a defined schema, spark RDD's do not.
+
+
+
+
+
+10. Let's say one computer in you Spark cluster fails, but you still get results.
+    How did Spark do this?!?  Your answer should include terms **RDD**, **Partition**, 
+    **immutable**, **DAG**, **Lazy Evaluation**, **Spark Context**, 
+    **Cluster Manager**, and **Worker Node**.
+
+* Rdd - this means is distributed, so if you lost one part its ok and it wont shut down a whole system.
+
+* Partition - a partition is just one piece of a distributed system.
+
+* Immutable - 
+
+* DAG - 
+
+* Lazy evaluation - 
+
+* Spark context - 
+
+* Cluster manager - 
+
+* Worker node - 
+
+
 
 -----------------------
 
