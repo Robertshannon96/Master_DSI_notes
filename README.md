@@ -2495,3 +2495,197 @@ print(rddout.collect())
 .mean()	action	Compute the mean of this RDD’s elements.
 .stdev()	action	Compute the standard deviation of this RDD’s elements.
 ```
+
+
+### KKN
+
+Knn in high dimensions: Works pretty well for dimensions < 5.
+
+General guideline:
+* Given n data points in d(orig) dimensions:
+* if you want to increase the total number of dimernions to d(new), you now need d(new/dorig)
+
+
+#### Summary KNN
+Pros:
+* Super simple
+* Training is trivial (store the data)
+* Works with any number of classes
+* Easy to add more data
+* Few hyperparameters
+    * distance metric
+    * k
+
+
+Cons:
+* High prediction cost (especially for large datasets)
+* Bad with high dimensions
+* Categorical features don't work well
+
+
+
+- What is a model
+ * A machine learning model can be a mathematical representation of a real-world process. To generate a machine learning model you will need to provide training data to a machine learning algorithm to learn from.
+
+ * A statistical model is a mathematical model that embodies a set of statistical assumptions concerning the generation of sample data (and similar data from a larger population). A statistical model represents, often in considerably idealized form, the data-generating process.  
+
+```python
+class Mean_Regressor():
+    
+    def __init__(self, *arg, **kwargs):    #no hyperparameters
+        pass
+    
+    def fit(self, X, y): 
+        self.mean_prediction = y.mean()
+        return self
+    
+    def predict(self, x):  
+        return self.mean_prediction
+```
+
+
+#### Choosing k
+
+
+In general, a good starting point for k is $\sqrt{n}$
+
+Let's investigate for various values.
+
+
+### Cross Validation
+
+- Simple Complexity model
+* ex: The broncos winning yesterday, exciting game easy to say they are the best, but really they aren't
+
+* Variance: Low variance of predicted value
+
+* Bias: high bias
+
+
+- Complex model complexity
+* ex: Broncos aren't that great when looking at tons of different attributes about players, season stats, history. 
+
+* Variance: High variance of predicted value
+
+* Bias: low bias
+
+
+
+* How can we mitigate Bias and Variance when it comes to modeling?
+    -Cross Validation
+
+
+
+#### Cross Validation
+* Cross validation is a model validation technique for assessing how the results of a staistical analysis will genelralize to an independent data set.
+
+* We use cross validation for three things:
+    - Attemping to quantify how well a model will perdict on an unseen data set
+    - Tuning hypterparameters of models to get best predictions
+    - Choosing between types of models
+
+
+* parameters
+- They are required by the model when making predictions
+- they are often not set manually and estimated or learned from data
+- I.E Normal distribution paramters- Mean,Standard deviation
+
+* Hyperparameters
+
+- Set mannually by the user
+- they are often used in processes to help estimate model parameters
+- tuned to better predict for model
+- I.E - KNN Hyper parameters - number neighbors, distance metric, etc..
+
+
+* Steps to cross validation
+1. Split your data (after splitting out holdout set) into training/valdation sets
+    - 70/30, 80/20, or 90/10 splits recommended
+2. Use the training set to train several models of varying complexity.
+    - ex: linger regression (w/ and w/out interaction features), neural nets, deision trees
+3. Evaluate each model using the validation set
+    - calculate R^2, MSE, accuracy or whatever you think is best
+4. keep the model that performs best over the validation set
+
+* Four cases of fitting 
+1. Underfitting - Validation and training error high
+2. Overfitting - Validation error is high, training error low
+3. Good fit - Validation error low, slightly higher than the training error
+4. Unknown fit - Validation error low, training error high-- Caution
+
+
+* What to do if your model is overfitting?
+1. get more data
+2. Subset selection: Keep only a subset of your predictors
+3. Regularization: Restrict your models parameter space
+4. Dimensionality reducton: Project the data into a lower dimensional space
+
+* Subset selection
+
+
+
+
+
+
+* Describe the Bias-Variance Trade-off and how we find the optimal model
+- the more bias the more variance you get, So lots of bias then the model dosent adjust to new data.
+With high variance. You use cross validation to find the top model.
+
+* Describe the four forms of fitting for a model
+underfitting - high bias
+over fitting- high variance
+good fit - perfect
+unknown fit- somethings wrong I dont know what it is. 
+
+* Describe why cross validation is used
+Cross validation used to see how well a model will perform on unseen data. Can use to fine tune hyper paramaters
+
+* Describe how to do it (especially k-fold cross validation)
+K-fold validation- training k number of estimates, instead of training one model. this is basically the first step of cross validation. But you're doing it K times on the data?
+
+* What do you do if your model is underfitting
+- give it more data
+- increase the model complexity
+- add features
+
+* What are the ways to statistically compare models and select the best one
+- Cross validation
+    - relys more on computation power, but its perferred. 
+
+
+
+# CROSS VALIDATION NOTEBOOK
+
+
+```python
+# how to split the data 
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, shuffle=True, test_size=0.33, random_state=42, stratify=y)
+```
+
+
+```python
+# Each model is trained 5 times. The training happens on 4 subsets and evaluation happens on the 5th subset. We then take the average of all 5 runs and average them into a single value. This value represents the mean accuracy of the KNN at a particular "k" value.
+
+kf = KFold(n_splits=5)
+scores = np.zeros(3)
+params = [3, 11, 21]
+for i, k in enumerate(params):
+    knn = KNeighborsClassifier(n_neighbors=k)
+    temp = np.zeros(5)
+    for j, (train_index, val_index) in enumerate(kf.split(X_train)):
+        X_tr = X_train[train_index]
+        y_tr = y_train[train_index]
+        X_vl = X_train[val_index]
+        y_vl = y_train[val_index]
+    
+        knn.fit(X_tr, y_tr)
+        accuracy = knn.score(X_vl, y_vl)   # how to score a knn model
+        temp[j] = accuracy
+        
+    scores[i] = temp.mean()
+print(scores)
+
+
+best = params[scores.argmax()]; best    # show the best score from cross validation
+```
