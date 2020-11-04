@@ -44,9 +44,10 @@ plt.style.use('ggplot')
 
 
 --------------------------------------------
-## Del, Topics to study each night
-* Pandas Data frames
-* Stats Quest for breakdown of stats concepts
+## Del, Topics to study tonight
+* Skew, kurtosis
+* Linear regression, overall view
+* 
 
 
 -----------------------
@@ -1350,7 +1351,7 @@ p = 0.6
 * Given that the true distribution is H1, the probability our test rejects the (false) null hypothesis.
 
 * Significance level - a
-* beta - b
+* beta - b 
 
 * Higher alpha = higher type 1 error, higher power
 * high effect size = higher power, lower type 2 error
@@ -2552,6 +2553,11 @@ In general, a good starting point for k is $\sqrt{n}$
 Let's investigate for various values.
 
 
+* a high k would be high bias and low variance
+
+* How do you calculate bias and variance?
+- You don't.
+
 ### Cross Validation
 
 - Simple Complexity model
@@ -2598,7 +2604,7 @@ Let's investigate for various values.
 - I.E - KNN Hyper parameters - number neighbors, distance metric, etc..
 
 
-* Steps to cross validation
+### Steps to cross validation
 1. Split your data (after splitting out holdout set) into training/valdation sets
     - 70/30, 80/20, or 90/10 splits recommended
 2. Use the training set to train several models of varying complexity.
@@ -2621,10 +2627,6 @@ Let's investigate for various values.
 4. Dimensionality reducton: Project the data into a lower dimensional space
 
 * Subset selection
-
-
-
-
 
 
 * Describe the Bias-Variance Trade-off and how we find the optimal model
@@ -2689,3 +2691,74 @@ print(scores)
 
 best = params[scores.argmax()]; best    # show the best score from cross validation
 ```
+
+## supervised learning 
+
+* Unsupervised learning is a type of machine learning that looks for previously undetected patterns in a data set with no pre-existing labels and with a minimum of human supervision.
+
+
+regression vs classification:
+
+* regression: trying to predict a numeric value (ex: income of someone)
+    * linear regression, logistic regression.
+
+* Classification -trying to predict a class, a probability of something/someone in a class.
+
+#### Linear regression
+
+```python
+n = len(cars)
+n_holdout = int(n*0.2)
+
+cars = cars.sample(len(cars))
+cars_test = cars.iloc[:n_holdout]
+cars_train = cars.iloc[n_holdout:]
+
+mean_mpg = cars_train.mpg.mean()
+
+fhat = lambda X: np.ones(len(X))*mean_mpg  # our model!
+yhat = fhat(cars_test) # predictions for all cars!
+
+mse = ((cars_test.mpg - yhat)**2).mean()
+```
+
+
+
+MAE: basic
+MSE: punish larger outlier errors
+RMSE: correct units
+MAE: mean absolute errors
+MSE: mean squared errors
+RMSE: room mean squared errors
+
+
+```python
+# how to create dummy values
+cars["american"] = cars.origin.map( lambda x: 1.0 if x==1 else 0.0 )
+cars["european"] = cars.origin.map( lambda x: 1.0 if x==2 else 0.0 )
+cars["asian"] = cars.origin.map( lambda x: 1.0 if x==3 else 0.0 )
+```
+
+
+### Inferential-linear-regression lecture
+
+##### Linear regression assumptions:
+* Linearity
+* Independence
+* Homoscedasticity
+* Normal distribution of erros
+
+
+Linear Regression p-values
+* A p value describes the amount of surpise that we feel when observing datam given that we are taking a skeptical stance on how that data is generated.
+
+    P(Observing A statistic equal or more extreme than actual | Ho )
+
+beta zero - generally intercept
+beta one - slope 
+
+
+Consistency: The indpendence assumption
+The consistency of linear regression adresses the effect of gathering more data. We would like the regression to become more and more accurate as we feed it more training data. 
+
+homoscedastic - variance is the same everywhere, dispursion is the same everywhere
