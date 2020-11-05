@@ -42,6 +42,21 @@ import pandas as pd
 plt.style.use('ggplot')
 ```
 
+## Imports for Regression
+```python
+import numpy as np
+import pandas as pd
+from pandas.plotting import scatter_matrix
+
+from sklearn.linear_model import LinearRegression, Ridge, Lasso
+from sklearn.model_selection import train_test_split, KFold
+from sklearn.preprocessing import StandardScaler
+from sklearn.base import clone
+
+%matplotlib inline
+import matplotlib.pyplot as plt
+```
+
 
 --------------------------------------------
 ## Del, Topics to study tonight
@@ -2818,3 +2833,76 @@ of feature coefficients.
 - Large lambdas mean more regularization (fewer/smaller coefficients)
 and less model complexity.
 4. You can have it all! (ElasticNet)
+
+
+
+```python
+# how to check for null values in pandas
+X.isnull().sum()
+
+# Where X is your DataFrame
+```
+
+### Logistic Regression - another great jack bennetto lecture!
+* Logistic regression is a supervised-learning parametric classification model.
+
+Why cant you use linear regression for classification?
+- Mostly because you want to get a probability
+
+* Accuracy - the percentage chance that we are correct
+- Accuracy = (True positives + True negatives) / (True positive + True Negative + False Positive + False Negative)
+
+
+MLE: Maximum likelihood estimation
+
+```python
+
+## attempt at cross validation logistic regression lecture
+
+
+import numpy as np
+import pandas as pd 
+import matplotlib.pyplot as plt 
+from sklearn.model_selection import KFold
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+from sklearn.metrics import precision_score
+from sklearn.metrics import recall_score
+
+def cross_val(X, y):
+    kf = KFold(n_splits=10)
+    accuracy = np.zeros(10)
+    precision = np.zeros(10)
+    recall = np.zeros(10)
+    for idx, (train, test) in enumerate(kf.split(X)):
+        X_tr = X.iloc[train]
+        X_te = X.iloc[test]
+        y_tr = y.iloc[train]
+        y_te = y.iloc[test]
+        model = LogisticRegression(C=1000)
+        model.fit(X_tr, y_tr)
+        y_pred = model.predict(X_te)
+        accuracy[idx] = model.score(X_te, y_te)
+        precision[idx] = precision_score(y_te, y_pred)
+        recall[idx] = recall_score(y_te, y_pred)
+        
+    print(np.mean(accuracy), np.mean(precision), np.mean(recall))
+    
+
+if __name__ == '__main__':
+    df = pd.read_csv('../data/grad.csv')
+    df = df.append(pd.get_dummies(df['rank']))
+    print(df.head(5))
+    admin_perc = pd.crosstab(df['admit'], df['rank']).transpose()
+    admin_perc['perc'] = admin_perc[1]/(admin_perc[0]+admin_perc[1])
+    
+    
+    y = df['admit']
+    X = df.drop(['admit'], axis=1)
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y)
+
+
+    # cross_val(X_train, y_train)
+
+    ```
