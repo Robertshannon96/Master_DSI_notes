@@ -2762,3 +2762,59 @@ Consistency: The indpendence assumption
 The consistency of linear regression adresses the effect of gathering more data. We would like the regression to become more and more accurate as we feed it more training data. 
 
 homoscedastic - variance is the same everywhere, dispursion is the same everywhere
+
+
+
+### Regularized Linear Regression
+
+[Regression]('images/regression.png')
+
+* REVIEW:
+    - Unederfitting: the model dosen't fully captue the relationship between predictors and the target. The model has not learned the data's signal.
+
+    * What to do when our model underfits the data?
+        - Add more complexity - more predictors, higher order terms.
+        - 
+
+    - Overfitting: The model has tried to capture the sampling error. The model has learned the data's signal and the noise.
+
+How do you pick which lambda value to use?
+- Cross Validation.
+
+How to decide between ridge regression and lasso regression?
+- Cross Validation
+
+
+Ridge: Forces parameters to be small. Also ridge is computationally easier because it is differentiable.
+
+* Lasso - tends to set coefficients exactly equal to zero
+    * This is useful as a sort of automatic feature selection mechanism
+    * Leads to sparse models and serves a smilirar purpose to stepwise features selection.
+
+Sparse models will benefit from LASSO
+Dense models will benefit from Ridge Model.
+
+
+```python
+# Sklearn ridge, sklearn lasso
+
+sklearn.linear_model.LinearRegression(...)
+sklearn.linear_model.Ridge(alpha=my_alpha, ...)
+sklearn.linear_model.Lasso(alpha=my_alpha, ...)
+
+sklearn.linear_model.ElasticNet(alpha=my_alpha, l1_ratio = !!!!, ...) 
+
+```
+
+
+ 1. Use regularization!
+- Helps prevent overfitting
+- Helps with collinearity
+- Gives you a knob to adjust bias/variance trade-off
+2. Don’t forget to standardize your data!
+- Column-by-column, de-mean and divide by the standard deviation
+3. Lambdas control the size (L1 & L2) and existence (L1)
+of feature coefficients.
+- Large lambdas mean more regularization (fewer/smaller coefficients)
+and less model complexity.
+4. You can have it all! (ElasticNet)
