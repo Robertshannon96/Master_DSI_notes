@@ -185,9 +185,6 @@ e) Either a), b), c) or d) is a trick question. Which one is it, and why?
    print_s3_contents_boto3(boto3_connection)
 ```
 
-
-
-
 The code works, but you can't shake a feeling of impending doom.  Why?  What would
 you do to allow the code to work but prevent financial ruin?
 
@@ -302,6 +299,117 @@ you do to allow the code to work but prevent financial ruin?
 * Cluster manager - 
 
 * Worker node - 
+
+
+
+
+### Week 4 Review
+
+
+
+
+1. What are the assumptions behind OLS linear regression?
+    - Errors are iid~N(0, sigsq*l) -> Constant variance(Homoscedastic), independent, normally distributed with mean zero
+        - The variance of the erros stays the same as the feature changes. Sigma is not dependent on X.
+    - Observations are independent (consistent)
+    - Model is linear
+        - The 'linear' in the name "linear regression" does not mean that the model is attewmping to fit aq linear function of the raw fewatures. Instead, it means that the model is a linear function of the transformed features.
+
+
+2. What are some metrics for linear regression goodness of fit, and what do they mean?
+    - R^2 measure of variance explained by the model (always increases with more features - adjusted R^2helps with this)
+    - F -test: Hypothesis test: null model w/ no predictors is sufficient
+    - RSS and MSE measure of residuals, can compare to other model choices
+
+
+
+3. In the context of machine learning, what are bias and variance? And what is the bias-variance trade-off?
+    - Bias is when your line becomes underfit (model is too felxible) and misses whatever signal your datapoints are trying to show. The data is not influencing the model enough
+    - Variance is when your line becomes overfit (model is too strict) and hits too many of your datapoints, Higher variance captures signal and noise
+
+4. Explain the process you would use to make a generalizable supervised learning model. In the process, compare/contrast cross-validation using a single train-test split to k-fold. What advantage does k-fold have over a single train-test split? Is k-fold always best?
+
+    1. Cross Validation process: 1) Split data (after splitting out hold out set) into training/validation sets, 2) use training set to train several models of verying complexity, 3) Evaluate each model using the validation set 4) Keep model that performs best on the valdiation set
+
+    2. Single train-test split: After training only get one estimate of validation error- there is a chance this set is different than the training set, especially if it is a time series data set that has not been shuffled in the analysis.
+
+    3. K-Fold: After training, get k estimates of validation error from the same model complexity, calcuate the mean validation error from K estimates. Given a more robust, less variable (potentially more biased) estimate.
+
+
+5. A coworker explained his machine learning workflow to you, and you have a suspicion that there's something wrong about it:
+
+"After I got the data I immediately did a train-test split to make a hold-out set. Then I standardized the remaining training data and used 5-fold cross-validation to determine the best model hyper-parameters. I used AIC as my model comparison metric. I took the hyper-parameters I got from cross-validation and trained a model on the full training set. Then I got my AIC on the hold-out set and it didn't do as well, by a long shot, as it did during cross-validation."
+
+Where did he go wrong?
+
+
+* He should have standarsized hold-out set with training mean and SD
+
+
+6. What is the curse of dimensionality in machine learning? What can you do to address it?
+    - As dimensions increase the data becomes farther apart (more sparse)
+    - Fixed by: More data reducing unnecessary dimensions (features)
+
+
+
+7. We talked about L1 and L2 regularization. What are they and in what situations might you use one instead of the other?
+    - L1: Lasso regression, used for sparse models
+        * Tends to set coefficients exactly equal to zero
+    - l2 : Ridge regression used for dense models.
+        * is computationally easier because it is differentiable
+
+8. Draw a confusion matrix for binary predictions.
+
+|                 | Predicted positive | Predictive negative |   |   |
+|-----------------|--------------------|---------------------|---|---|
+| Actual positive | True positive      | False Positive      |   |   |
+| Actual Negative | False Negative     | True Negative       |   |   |
+|                 |                    |                     |   |   |
+
+
+A type-I error is a false positive (which I remember because that phrase is more common than false negative).
+Accuracy = (TP+TN) / (TP+TN+FP+FN)
+Sensitivity = Recall = TPR = TP / (TP+FN)
+FPR = FP / (TN+FP)
+Specificity = TN / (TN+FP)
+Precision = PPV = TP / (TP+FP)
+NPV = TN / (TN+FN)
+
+
+9. Give an example for each case:
+
+* Precision is more important than recall.
+    - Sensitivity- Of items that are actually classified as "A" how many of your predictions were also classified as "A". probability something is predicted to be positive given it is actually positve
+
+    - Precesion- Of items predictied to be classified as "A" How many are actually/truly classified as "A"; Probability something is actually positive given it is predicted to be positive.
+
+    - Precison is more important than recall(Sensitivity)
+    
+    - Recall (sensitivity): is more important than precision
+        - medical test - want to correctly 'predict
+* Recall is more important than precision.
+
+* You consider both to be important (and what metric would you use for that?)
+    - Use the f-score. F score evaluates a test assuming that recall is Beta times as important as precison.
+
+
+10. How is a ROC curve generated? What does it show?
+     - An ROC curve is generated by graphing the TPR (sensitivity) and FPR (specificity) for various thresholds. It show how often your model ended up being right in it's predictions
+
+
+11. What are the similarities and differences between linear and logistic regression and how do you interpret the coefficients in each case?
+
+    - Logistic regression is used to predict the probability of a certain classification of a new data point
+        1. Interpret the coefficients using the odds ratio - the ratio of the probability of the positive to the negative case
+            - Log odds ratio (just take log of odds ratio): if we increase a particular feature by 1, then we will increase the log odds-ratio by corresponding coefficent
+
+            - Linear regression trying to predict the numerical value of a data point?
+                * Coefficents relay how much the target value will change with change in target feature, staying within the same population. 
+
+
+
+
+
 
 
 
@@ -2845,6 +2953,9 @@ X.isnull().sum()
 
 ### Logistic Regression - another great jack bennetto lecture!
 * Logistic regression is a supervised-learning parametric classification model.
+* Logistic Regression is a basic algorithm used for making predictions about categorical, not numerical, targets
+*  The regression part comes from the fact its output is continuous along 0 to 1.
+*  but it is not a regression algorithm because it is not predicting the actual value of the target. Rather, it is predicting the probability that the outcome is true (e.g. the probability that your team will win).
 
 Why cant you use linear regression for classification?
 - Mostly because you want to get a probability
@@ -2854,6 +2965,17 @@ Why cant you use linear regression for classification?
 
 
 MLE: Maximum likelihood estimation
+
+
+
+
+
+
+
+
+
+
+
 
 ```python
 
@@ -2906,3 +3028,9 @@ if __name__ == '__main__':
     # cross_val(X_train, y_train)
 
     ```
+
+
+### Derivatives
+
+$ \frac{d}{dx}(c \cdot f(x)) = c \cdot \frac{d}{dx}f(x) = c \cdot f'(x) $  
+
