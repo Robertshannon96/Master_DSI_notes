@@ -3027,10 +3027,216 @@ if __name__ == '__main__':
 
     # cross_val(X_train, y_train)
 
-    ```
+```
 
 
-### Derivatives
+### Time series lecture
 
-$ \frac{d}{dx}(c \cdot f(x)) = c \cdot \frac{d}{dx}f(x) = c \cdot f'(x) $  
+A *time series* is a specific type of data, where measurements of a single quantity are taken over time at regular intervals.
 
+Values very very much depend on previous data
+
+Trend fitting:
+
+* Moving Average: A very general approach that can be used for detrending data is to compute moving average (also known as rolling average)
+
+
+```python
+# Moving to functions, note the default window here is 6
+def fit_moving_average_trend(series, window=6):
+    return series.rolling(window, center=True).mean()
+
+def plot_moving_average_trend(ax, name, series, window=6):
+    moving_average_trend = fit_moving_average_trend(series, window)
+    plot_trend_data(ax, name, series)
+    ax.plot(series.index, moving_average_trend)
+```
+
+Trend-Seasonal-Residual Decompotion
+
+```python
+python_decomposition = sm.tsa.seasonal_decompose(google_trends['python'])
+```
+
+```python
+# a common way to load in data, convert to date-time, then change index.
+def load_google_trend_data(name):
+    """Load saved data for a google trend.
+    
+    NOTE: For this to work you need to have started your notebook from the
+    lecture directory.
+    """
+    file_name = os.path.join('.', 'data', ''.join(['search-index-', name, '.txt']))
+    df = pd.read_csv(file_name)
+    df = df.set_index(pd.DatetimeIndex(df.week))
+    del df['week']
+    return pd.Series(df[name], df.index)
+```
+
+
+### Decision Trees lecture
+* Supervised learning method - you have a target varible, something going for
+* Non parametric - not involving any assumptions as to the form or parameters of a frequency distribution.
+
+
+Decision trees are a supervised, non-parametric learning method whose trained form is a series of sequential, binary “splits” on features with the goal of minimizing predictive error.
+
+* A decision tree is a (binary) tree, with each branch (non-leaf) node having a left and right child node. Each branch node specifies a feature (predictor, attributes) to split along with information on which values should pass to the left/right node.
+
+
+Gini impurity is defined by the probability of object j in a set is identified correctly multiply by it is identified incorrectly, sum over all objects:
+
+![image](images/gini.png)
+
+![image](images/ig.png)
+
+
+how to calculate the gini of a node
+
+
+
+
+IG = Information Gain
+GI = Gini Impurity
+
+Decision Tree Pseudocode
+* Recursive way to build a tree using the splitting algorithm
+
+1. start from empty decision tree
+2. split on next best feature based on splitting algorithm
+3. recurse
+
+Different types of decision trees
+1. Classification trees: in classification trees our out comes (target, output) are discrete. Leaf values are typically set to the most common outcomes.
+2. Regression trees: In regresiion treees our outcomes (target, output) are numerical. leaf values are typically set to the mean value in outcomes. in regression trees we use RSS instead of gini/Entropy
+
+
+
+Over fitting
+- likely if you build your tree all th eway until every leaf is pure. 
+* leaf size: stop splitting when #examples gets small enough
+
+* depth: stop splitting at a certain depth
+
+* purity: stop splitting if enough of the examples are the same class
+
+* gain threshold: stop splitting when the information gain becomes too small
+
+pruning Pseudocode
+Algorithm prune_tree(T,D)
+Input : decision tree T; labelled data D Output : pruned tree Tp        
+
+def prune_tree(T, D):
+for every internal node N of T (starting from the bottom):
+TN = subtree of T rooted at N;
+DN ={Data covered by N};
+if accuracy of TN over DN is worse than predicting majority class in DN :
+replace TN in T by a leaf labelled with the majority class in DN return pruned version of T
+
+STEPS TO TAKE
+1. get information gain on every variable the data has
+2. the best variable gain will tell you which ones to use
+
+
+Entropy splitting
+* Entropy is another measure that quantifyies the randomness. If the probability of identifying the object j corrrectly is P(j) and the probability of identifying it incorrrectly is 1-p(j) then the entropy is defined : 
+
+![image](images/entropy.png)
+
+
+What about Regression?
+* Possible Splits:
+* Consider all binary splits based on a single feature:
+* if the feature is categorical, split on value or not value.
+* if the feature is numeric, split at a threshold: >threshold or <=threshold
+
+
+
+--
+* Splitting Algorithm:
+* Calculate the information gain for all possible splits.
+* Commit to the split that has the highest information gain (as measured by
+reduction in variance)
+
+```python
+from sklearn import tree import matplotlib.pyplot as plt
+
+X_ring = np.random.normal(size=(200,2))
+y_ring = (X_ring[:,0]**2 + X_ring[:,1]**2) < 0.7 
+plt.scatter(X_ring[:,0], X_ring[:,1], c=y_ring, cmap='bwr')
+
+dt = tree.DecisionTreeClassifier(criterion='entropy') 
+dt.fit(X_ring, y_ring)
+
+plot_colors = "br" 
+plot_step = 0.02
+ plt.figure(figsize=(10, 5))
+
+# Plot the decision boundaries
+x_min, x_max = X_ring[:, 0].min() - 1, X_ring[:, 0].max() + 1
+
+y_min, y_max = X_ring[:, 1].min() - 1, X_ring[:, 1].max() + 1   xx, yy = np.meshgrid(np.arange(x_min, x_max, plot_step),
+        np.arange(y_min, y_max, plot_step))
+
+Z = dt.predict(np.c_[xx.ravel(), yy.ravel()])
+Z = Z.reshape(xx.shape)
+cs = plt.contourf(xx, yy, Z, cmap=plt.cm.Paired) plt.scatter(X_ring[:,0], X_ring[:,1], c=y_ring, cmap='bwr'); plt.axis("tight")
+plt.xlim(-1.5,1.5)
+plt.ylim(-1.5,1.5)
+```
+
+
+Advantages of decision trees
+* Compared to other algorithms decision trees require less data preparation
+* A decision tree does not require normalization or scaling of data
+* Missing values in the data also do not affect the process of building a decision tree to any considerable extent
+* A decision tree model is very intuitive and easy to explain to technical teams as well as stake holders
+* Predictions are fast to compute
+
+disadvantages of decision trees
+* A small change in the data can cause a large chane in the structure of the tree causing instability
+* decision tree calculation can be far more complex than to other algorithms
+* Decision trees often involve longer training times
+* The decision tree algorithim is inadequate for applying regression and prediciting continous values
+* Decision boundaries are only constructed at right angles 
+
+overfitting in decision trees
+pre fitting
+
+
+-----
+
+### Recursion
+
+
+Recursion uses the idea of "divide and conquer" to solve problems. It divides a complex problem you are working on into smaller sub-problems that are easily solved, rather than trying to solve the complex problem directly.
+
+Three Laws of Recursion
+1. Arecursivealgorithmmusthaveabasecase.
+2. Arecursivealgorithmmustchangeitsstateandmovetowardthebase
+case.
+3. Arecursivealgorithmmustcallitself,recursively.
+
+
+
+
+
+```python
+# example of recursion in python
+def factorial(x):
+    """Recursively calculate x!"""
+    # base case is when we get to x=0, which is 0! = 1 
+    if x == 0:
+        return 1
+    # otherwise, recursive case, notice how we are reducing x
+    else:
+        return x * factorial(x-1)
+
+def power(base, exp):
+    """Recursively caclulate base ** exp"""
+    # base case is when exp = 0, base ** 0 = 1 
+    if exp == 0:
+        return 1
+    # otherwise, recursive case, reduce exp 
+    return base * power(base, exp - 1)
+```
