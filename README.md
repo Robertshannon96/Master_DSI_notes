@@ -3240,3 +3240,118 @@ def power(base, exp):
     # otherwise, recursive case, reduce exp 
     return base * power(base, exp - 1)
 ```
+
+### Review of decision trees
+
+ Review Decisions Trees
+1. What metrics are used to describe the impurity in a node of categorical variables?
+* Entropy, Gini
+2. What about for a continuous variable?
+* 
+3. How is the value of each split determined?
+* Information gain. Take the impuritry of the parent minus the impurity of the child
+
+4. Are decision trees deterministic? Parametric or nonparametric?
+* Deterministic yes- Once they are trained, they
+will arrive at the same conclusion every time given the same X values.
+
+* Nonparametric - We don’t make any assumptions (mean, variance, etc.) about our data when we create a tree
+
+5. Describe the bias and variance of a fully-grown tree.
+* Bias- 
+* Variance will be high. It overfits, it would be too perfect. 
+
+6. How do we reduce the variance of a decision tree?
+* Prune some of the leaves/nodes and prune as you builld. (stopping condition)
+7. What are some hyperparameters associated with decision trees?
+
+8. How is regression performed with decision trees?
+* get Information gain of each split, then end up with leaf nodes, Once we have a leaf node, to predict a value of a node. Depends: regression on each leaf (fancy way). 
+
+![image](images/decision_tree.png)
+
+### Ensemble methods
+Ensemble methods involve combining multiple weak learners to make one strong learner
+
+Two general categories: Aggregators and iterators 
+
+Aggregators:
+1. Train multiple models on the data
+2. Predict using average (regressors) or plurality choice/percentages (classifiers)
+
+
+Bootstrapping
+* Given a sample of N data points, we take B bootstrapped samples of our data with replacement
+* We typically use the bootstrap to get confidence intervals around a statistic/parameter
+
+Bagging (bootstrap aggregation)
+* Bagging = Bootstrap -> fit a model -> repeat -> Aggregate
+
+
+bagging review
+1. What is an ensemble method?
+* take a bunch of weak learners and make one streong learner
+* two types: Aggregators and iterators
+
+2. Why do we use to bootstrap?
+* Bootstrap allows us to obatin more data points, create different trees.
+
+3. The general idea of bagging decision trees is to start with "LOW" bias, "HIGH"
+variance trees and aggregate across multiple models to
+decrease "Variance"
+
+4. Why do we use bagged deicision trees to build ensemble models?
+* To decrease varance, We had a model with high variance, with aggreagation, it significantly reduces the output. low variance, low bias = fantastic. 
+
+## Random Forest
+
+Random Forest improves over bagging with a small tweak that decorrelates the trees -- in other words, it makes the individual trees more independent of each other.
+
+At each split in each tree, Random Forest randomly selects m features to consider for the split -- oftentimes the default m = sqrt(p) where p is the number of features we are using to train our model
+
+![image](images/randomforest.png)
+
+random forest hyper parameters:
+* Number of trees in the forest = n_estimators
+* information gain metric = criterion
+* numbers of reatures to consider for split = max_features
+* Individual tree hyperparameters-
+    * tree pruning(max_depth, max_leaf_nodes, min_samples_split, etc.)
+
+
+How can we decide on the set of features to consider for a split at each node?
+- Randomly.. we randomly select M (which we can define) features at each node
+
+
+Once we have selected m features, how do we decide which one to split on?
+- Our information gain criterion... Entropy, Gini for classification and RSS for regression.
+
+
+What are the reasons that make Random Forest a drastically lower variance model than single Decision Trees -- and even simple bagged models?
+
+- The trees that make up the forest are more independent. They don’t train on all of the same data and they don’t split on the same features. This makes them more robust and helps them generalize to new data.
+
+### Random forest continued pm lecture
+
+Out of Bag Score is a quick and dirty “replacement” for cross validation
+
+ There are a several ways we can go about identifying important features:
+
+1. Measure the total amount the information gain increases due to splits over a given feature
+
+2. Record what portion of points pass through a single split -- the higher in a tree a feature is split on, the more important
+
+3. Combine 1 & 2 with rf.feature_importances_ (where rf is your fit RandomForestClassifier / RandomForestRegressor)
+
+
+Two more methods...
+
+1. When tree Bi is grown score it with OOB, then remove that feature and score it again to measure the change in your validation metric(s) -- This is called Leave One Out Feature Importances
+
+2. Iterate through features dropping mi out and plotting feature importances -- help with “multicollinearity”
+
+
+What does feature importance not tell us?
+* It is difficult to learn the effect size and direction of a feature... but this is the price we pay for a model that can handle nonlinear relationships.
+
+* For most real world problems, features don't have a constant effect size across all x-values, and sometimes the effect direction can even reverse at different levels of X
