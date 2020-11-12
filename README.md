@@ -3290,7 +3290,7 @@ Bagging (bootstrap aggregation)
 
 bagging review
 1. What is an ensemble method?
-* take a bunch of weak learners and make one streong learner
+* take a bunch of weak learners and make one strong learner
 * two types: Aggregators and iterators
 
 2. Why do we use to bootstrap?
@@ -3355,3 +3355,58 @@ What does feature importance not tell us?
 * It is difficult to learn the effect size and direction of a feature... but this is the price we pay for a model that can handle nonlinear relationships.
 
 * For most real world problems, features don't have a constant effect size across all x-values, and sometimes the effect direction can even reverse at different levels of X
+
+
+### Gradient boosting
+The goal of ensemble methods is to combine the predictions of several models of a given learning algorithm to improve generalizability / robustness over a single model.
+
+Two families of ensemble models:
+* In averaging methods, high variance models are built and then their predictions are averaged. The combined model is usually better than any single model because its variance is reduced. (ex. bagging, random forests)
+
+* In boosting methods, high bias models are built sequentially on top of each other. The motivation is to combine many weak models to produce a powerful ensemble low-bias model in the end. (ex. boosted trees)
+
+Boosting-general idea
+* in boosting, an esemble of trees if grown sequentially, based on information learned in the previous tree.
+
+* Specifically, each new tree (after the first) is fit on some modified version of the training set based on results from the previous tree
+
+* In adaboost, the data associated with the largest residuals are weighted the most in the new training set
+
+* In gradient boosting, the new training set is the residuals (makes "new" training sets")
+
+
+
+
+1. What is a weak learner?
+* A (classifier, predictor, etc) that performs relatively poorly-- its accuracy is above chance, but just barely.
+2. How do bias & variance relate to a weak learner?
+* Low bias and high variance could be both really? Decrease one with out decreasing the other too much.
+3. How are weak learners used in boosting?
+* taking really high bias trees and stringing them together 
+4. Describe how a decision tree can be a weak learner.
+* If we prune it a lot, then it could make the decison tree weaker.
+
+Use randomizedsearchCV to find your hyperparameters
+
+Randomized Parameter Optimization (RandomizedSearchCV) Implements a randomized search over parameters, where each setting is sampled from a distribution over possible parameter values.
+
+Boosting Tips
+* Overfitting can be a problem with boosting, TO prevent this:
+    * Keep the base estimator simple (limit its max_depth to 2-8)
+    * Limit M, the maximum number of iterations. Use staged_predict (a method on a gradient boosting regressor object) to monitor the train and test erros as they evolve with each iteration.
+    * Use shrinkage
+    * Use stochastic gradient boosting using subsample and max_features
+    * Use large vaues for min_samples_leaf(also limits the depth of the tree)
+
+
+Describe conceptually what boosting is
+* you give each tree a job in seriel, let the first tree build a little, then send on to the next tree to build and refine a little and so on. IN the long term the goal is to have a completely refined model. In boosting, we start with high bias trees and not high variance trees. Finished result is then low bias trees. 
+
+* Describe the Gradient Boosting algorithm
+
+* List Gradient Boosting hyperparameters
+* Max_depth, max_features, shrinkage
+
+● Be able to use GridSearchCV to find the best hyperparameters for a model
+● List a couple of useful non-sklearn based boosting algorithms
+ 
