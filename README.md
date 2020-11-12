@@ -3407,6 +3407,27 @@ Describe conceptually what boosting is
 * List Gradient Boosting hyperparameters
 * Max_depth, max_features, shrinkage
 
-● Be able to use GridSearchCV to find the best hyperparameters for a model
-● List a couple of useful non-sklearn based boosting algorithms
- 
+### Neutral Netoworks MLP lecture
+Multilayer perceptron
+* Standard algorithm for supervised learning. Used for pattern, speech, and image recognition. 
+
+Autoencoder
+* Used for unsupervised learning of efficient codings, usually for dimensionality reduction, though recentely to make generative models
+
+Convolutional neural network
+* Node connections inspired by visual cortex. Uses kernals to aggregate/transofrm information in netowrk. Used for image, video, recognition, nip
+
+Recurrent Neural network
+* Connections between nodes can be cyclical, giving the network memory. Used for sequences: handwiring, speech recognition, time series
+
+Reinforcement learning
+* Use NNs feature extraction and prediction abilities to learn from an environment
+
+Transfer learning
+* Leverage vetted NN aarchitectures and pre-trained weights to get good performance on limited data
+
+
+pass a row of data in
+get all the way to predicion
+calcuate cost function
+calculate gradient descent
