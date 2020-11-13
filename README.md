@@ -303,7 +303,7 @@ you do to allow the code to work but prevent financial ruin?
 
 
 
-### Week 4 Review
+### Week 5 Review
 
 
 
@@ -405,6 +405,132 @@ NPV = TN / (TN+FN)
 
             - Linear regression trying to predict the numerical value of a data point?
                 * Coefficents relay how much the target value will change with change in target feature, staying within the same population. 
+
+
+
+
+## WEEK 6 REVIEW
+1. Write out the cost functions for:
+* Ordinary least squares
+
+        RSS = sum(yi-yhat)^2
+
+* Linear regression using L1 regularization: **Lasso Regression**
+
+![lasso](images/lasso.png)
+
+
+    sum(yi-yhat)^2 + lamda*sum|Bi|
+
+* Linear regression using L2 regularization: **Ridge Regression**
+
+![ridge](images/ridge.png)
+
+* Linear regression using Elastic net
+
+2. You're trying to make model that will predict the female gold medal winner in the high jump in the next Olympics. You have results and data for 1000 high-jumpers in the past. You're using four features: jumper_height, jumper_weight, best_jump_height, and fastest_100m_time as features and your model performs ... just ok during cross-validation. Then it hits you: you also have maximum_squat_weight for all the jumpers, why don't you use that as a feature too? Using this additional feature (5 total now) during cross-validation, however, you get widely varying estimates of model performance.
+
+
+* What do you think is going on?
+
+    Curse of dimensionality: As dimensions increasr the data becomes father apart (more sparse)
+    * Fixed by: More data or reducing unnecessary dimmensions(features)
+
+* As a bonus, how many data points would you need with 5 features to have the same sample density as your model had with 4 features?
+
+    - n**(dnew/dold)
+    - 1000**(5/4) = 5,624 data points (~4600 + than what you currently have)
+
+
+
+3. Decision tree questions:
+* Describe, step-by-step, how a decision tree is built.
+
+    1. Start with the whole data and create all the possible binary decisions based on each feature (predictor)
+
+        - For discrete features the decison is "in the class" or "not in the class" 
+
+        -  For continous features the decison is threshold < value or threshold >_ value
+
+    2. Calculate the gini impurity for every decision (or entropy)
+
+    ![gini](images/gini2.png)
+    ![entropy](images/entropy2.png)
+
+    3. Commit to the decision which results with the largest information gain
+        - IG = information gain
+        - Gi = gini impurity
+        - IG = parent_gi - (child1_Gi * weight 1) - (child2_gi * weight2)
+
+    
+    4. Repeat the pricess for each split until the tree is fully grown or stopping parameters are met. 
+
+
+
+
+* Describe how a binary split is made at a node in the case of:
+
+    * classification: Is it class A or Class B (True or False)
+
+    * regression: Is it > a certain value
+
+    * You decide to use a Decision Tree on the Olympic high jumper problem and you end up with a model that does very well on the training data but predicts poorly in cross-validation. What can you do?
+
+        - This model has too high of variance. if you want to stick to a single tree, you could prune the tree:
+        
+        - Pre-Pruning Techniques:
+            * leaf size: Stop splitting when # exmaples is small enough
+            * Depth - Stop splitting at a certain depth
+            * purity - Stop splitting if enough of the examples are of the same class.
+            * Gain threshold: Stop splitting when the information gain becomes too small.
+
+        - Post-pruning techniques
+            * Merge leaves
+            * Number of leaf nodes: Stop splitting when number of nodes gets too high 
+
+            * Or you could use a random forest model instead of a single decison tree, which would allow you to build out the tree to full depth, but will reduce the variance of the overall model when you take the average of the many trees.
+
+
+
+4. What are the two things that make a random forest "random"?
+
+    - Bootstrapping a different sample for each tree
+    - Random feature selection at every note. 
+
+
+5. What problem from bagging is solved by using a random forest? Hint: what type of algorithm is a decision tree split?
+
+    - Bagging = bootstrap aggregating. Bagging improves random forest because it decorrelates the trees; it makes them more independent of each other by using subset sampling
+
+6. You are a data scientist at a subscription company, and you decide to use a random forest model for predicting churn. The model works well, but your boss wants some insight into what factors contribute to customer churn. What can you tell him/her?
+
+    - You can create a feature importance bar chart to illustrate which features are most important to the model, but this will not give insight into HOW the features are influencing the model. 
+
+    - You can create a partial dependency plot to show your boss how features are influencing the model (the slope of these plots gives insight as to how much the target will change based on that feature)
+
+7. Compare and contrast random forests and boosted trees with regards to:
+
+    * The data that each tree in the ensemble is built on.
+    
+        - Bagging builds treees from bootstrapped samples (randomizing data samples). Random Forests in comparison randomize the features used to create the trees. Boosted tree are initiated with the original data and then they shift and become based on the residuals of that data after the first stump or tree.
+
+    * How the quality of a split on a given feature and its value is evaluated.
+
+        - Bagging will use whatever feature increases the IG for the bootstrapped data the best, random forests will use whatever feature of the randomly selected subset of features increases IG the most. 
+
+    * The general depth of each tree.
+
+        - Random forests go as deep as they need to, bagging howeverwill sometimes limit the tree depth. Boosted trees have limited depths, ADAboost typically only has two leafs while gradient boost will have 2-4 layers with 4-12 leafs depending on the model
+
+    * The bias-variance trade-off associated with each tree in the ensemble.
+
+        - Random forests have low variance and relatively low bias as well, bagged models have a bit more variance and slightly less bias but still have less variance than a single tree. A finished boosted model has low vairance and low bias because they are slow learners which allows them to adjust to the data without overfitting.
+
+    * How the ensemble can achieve a low-bias, low-variance model.
+
+        - We combine multiple weak learners (either high bias, low variance, as in high bias trees for bossting, or high variance, low bias, as in full grown decision tree) to make one strong learner. Then by the sequential addition of the models, the bias is decreased to get a low bias, low variance model. This is done either through aggregation or boosting. 
+
+
 
 
 
