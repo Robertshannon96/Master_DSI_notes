@@ -454,6 +454,8 @@ NPV = TN / (TN+FN)
 
     2. Calculate the gini impurity for every decision (or entropy)
 
+    **GINI and Entropy only work on classification splits**
+
     ![gini](images/gini2.png)
     ![entropy](images/entropy2.png)
 
@@ -1886,9 +1888,6 @@ def wrapper_for_scipy(x):
 
 ### Hypothesis testing
 
-* [link to Jupyer notebook on hypothesis testing](http://localhost:8888/notebooks/hypothesis-testing.ipynb)
-
-
 
 ### Data vizulization lecture
 
@@ -1990,7 +1989,6 @@ def calculate_posterior(likelihoods_lst, prior_lst):
 **Interval**: Numeric data with uniform spacing (date)  
 **Ratio**: Interval data with a natural zero  
 
-![Graphing Order of Importance based on Data Type](images/data_visualization.png)
 
 ## **Types of Plots and when to use them:**  
 
@@ -2053,7 +2051,7 @@ def one_dim_scatterplot(data, ax, jitter=0.2, **options):
 fig, ax = plt.subplots(1, figsize=(12, 1))
 one_dim_scatterplot(data, ax, s=15)
 ```
-![One Dimension Scatterplot](images/one_dimension_scatter_plot.png) 
+
 
 ## Empirical Distribution Plot
 
@@ -3557,3 +3555,162 @@ pass a row of data in
 get all the way to predicion
 calcuate cost function
 calculate gradient descent
+
+
+### Example of random forest code
+```python
+# random forest example
+# how to use random forest
+
+def random_forest(df,n_estimators=n_estimators):
+
+    #Creating target y (Churn: True or False)
+    y = df.pop('churn').values
+
+    #Creating X values 
+    X = df.values
+
+    #Performing a train test split
+    X_train, X_test, y_train, y_test = train_test_split(X, y)
+
+    #Creating random forest and fitting it
+    rf = RandomForestClassifier(n_estimators=n_estimators)
+    rf.fit(X_train,y_train)
+
+    #Get accuracy score for RF with n_estimator amount of trees
+    accuracy = rf.score(X_test, y_test)
+
+    #Getting feature importances
+    importances = rf.feature_importances_
+
+    #Casting column names to list
+    cols = df.columns.tolist()
+
+    #Creating dictionary with col name and importance value
+    importance_dict = {}
+    count = 0
+    for i in cols:
+        importance_dict[i] = importances[count]
+        count += 1
+    
+    return accuracy, importance_dict
+
+
+    def num_tree_plot(df)
+    num_trees = range(5, 50, 5)
+    accuracies = []
+    for n in num_trees:
+        tot = 0
+        for i in range(5):
+            rf = RandomForestClassifier(n_estimators=n)
+            rf.fit(X_train, y_train)
+            tot += rf.score(X_test, y_test)
+        accuracies.append(tot / 5)
+
+```
+
+
+```python
+
+# how to implement logistic regression
+# logistic regression from case study
+
+def cross_val_kfold(n_splits, X, y):
+    kf = KFold(n_splits=n_splits, shuffle=True)
+    X_train, X_test, y_train, y_test = train_test_split(X,y)
+    accuracy = []
+    precision = []
+    recall = []
+    mse = []
+
+    for train_idx, test_idx in kf.split(X_train):
+        model = LogisticRegression(max_iter=500)
+        model.fit(X_train.iloc[train_idx], y_train.iloc[train_idx])
+        y_pred = model.predict(X_train.iloc[test_idx])
+        y_true = y_train.iloc[test_idx]
+        accuracy.append(accuracy_score(y_true, y_pred))
+        precision.append(precision_score(y_true, y_pred))
+        recall.append(recall_score(y_true, y_pred))
+        mse.append(mean_squared_error(y_true, y_pred))
+
+    return y_pred, y_true, accuracy, precision, recall, mse, model
+
+
+```
+
+
+
+## images lecture
+
+image imports
+
+```python
+import matplotlib.pyplot as plt
+import numpy as np
+import pandas as pd
+from skimage import color, filters
+from skimage.transform import resize, rotate
+from skimage.io import imread
+```
+
+
+how to import images
+```python
+    male = imread('data/man.jpg')
+    female = imread('data/woman.jpg')
+    forest = imread('data/forest.jpg')
+    beach = imread('data/beach.jpg')
+```
+how to put images in dictonary
+how to resize images
+```python
+    
+    imgs =  {'Male': male, 'Female': female, 'Forest': forest, 'Beach': beach}
+    for k, v in imgs.items():
+        imgs[k] = resize(v, (300, 300))
+        
+    return imgs
+```
+
+
+
+
+how to turn images to grey scale
+```python
+def to_grey(imgs):
+    gray_imgs = {}
+    for k, v in imgs.items():
+        gray_imgs[k] = rgb2gray(v)
+    
+    show_image(gray_imgs)
+    
+    return gray_imgs
+```
+
+
+### Convolutional neural netowrk lecture
+
+Kernal : A small matrix used to apply effects like you might find in photoshop or something such as blurring, sharpening etc. They're used in ML for feature extraction
+
+
+How to calculate stride length
+outputsize (px): (N-F) / stride + 1
+where n = size/ dimension
+f = filter size
+
+padding is used to make an output array the same size as a input array. 
+
+Hyper parameters of cnn: 
+* number of filters - K
+* spatial extent - F
+* stride -  S
+* Amount of zero padding - P
+
+Pooling hyper parameters
+* Spatial extent - F
+* Stride - S
+* Type of pooling
+
+Common pooling settings:
+F= 2 S=2
+F=3 S = 2
