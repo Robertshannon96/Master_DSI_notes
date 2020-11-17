@@ -3714,3 +3714,51 @@ Pooling hyper parameters
 Common pooling settings:
 F= 2 S=2
 F=3 S = 2
+
+
+### NLP Lecture
+
+Natural-language processing (NLP) is an area of computer science and artificial intelligence concerned with the interactions between computers and human languages. In particular: how to program computers to fruitfully process large amounts of natural language data?
+
+NLP uses:
+* Conversational Agents
+    - siri, cortana, alexa, google home
+    - Talking to your car
+    - Communicating with robots
+
+* Machine Translation
+    - Google translate
+
+VOCAB: 
+* Corpus: A collection of documents. usually each row in the document 
+
+* Stop-words: Domain-specific words that are so common that they are not expected to help.
+
+* tokens: What documents are made of, and the columns in your X matrix. You'd think tokens are words (correct), but tokens are words that have been either stemmed or lemmatized to their root form: Car, cars car's, cars' = car
+
+* n-grams: How many tokens consitute a lingusitic unit in the analysis
+ - boy (n-gram=1), little boy(n-gram=2), little boy blue (n-gram=3)
+
+* Bag-of-words: A document is represented numerically by the set of its tokens preserving orde and nearby tokens
+
+
+
+**NLP text processing workflow**
+1. Lowercase all your text
+2. strip out miscellaneous spacing and punctuation
+3. Remove stop words
+4. stem or lemmatize the text into tokens
+5. Convert text to numbers using a bag of words model and a term frequency inverse document frequency matrix
+6. Train / Cluster your data in a machine learning model
+
+
+
+t = term(token)
+d = the document
+f(t,d) = the count of term in t in document d
+f(i,d) = the count of term i in the document d for all words in the vocabulary V
+
+
+
+log(docs/ 1 + docs containing t)
+
