@@ -3762,3 +3762,107 @@ f(i,d) = the count of term i in the document d for all words in the vocabulary V
 
 log(docs/ 1 + docs containing t)
 
+## Clustering lecture
+
+**Suprivised**
+* Have a target/label that we model
+* Models look like functions that take in features (X)and predict a label (Y)
+* Have an error metric that we can use to compare models
+* Used to predict future unlabeled data
+
+
+**Unsupervised**
+* No target/label to predict
+* goal is to find underlying structure, patterns, or orgainization in data
+* no stark error metric to compare models - determining if you have the optimal solution is very challenging. Cross validation often not applicable. 
+
+k-means clustering
+1. randomly assign each data to point to a cluster
+2. Compute the cetroid of each cluster
+3. reassign each point to belong to the nearest cluster
+
+Centroid Initialization methods
+
+1. (simplest) randomy choose k points from your data and make those your initial centroids
+
+2. randomly assign each data point to a number 1-k and initilaize the kth centroid to the average of the points with the kth label
+
+3. K means ++ chooses well spread intitial centroids. First centroid is chosen at random, with subsequent centroids 
+
+
+Stoppng Critera:
+we can update for:
+1. A specified number of iterations
+2. UNtil the centroids dont change at all
+3. until the centroids don't move much at all
+
+* Is k-means deterministic?
+No, some randomness to it. 
+
+
+* Whould we standardize features?
+
+
+**How to choose K**
+Possible methods:
+* Silhouette score
+
+* other methods (EX: GAP statistic)
+
+* Domain knowledge
+
+
+
+The solhoutte coefficient is calculated using the mean intra-cluster distance(a) and the mean nearest-cluster distance (b) for each sample
+
+Values range from -1 to 1 with 1 being optimal and -1 being the worst
+
+
+
+K-means assumptions
+- picked the correct k
+- clusters have equal variance
+- Clusters do not have to obtain the same number of observations
+
+
+Practical Considerations
+- k means is not deterministic -> falls into local minima. Should restart multiple times and take the version with the lowest within-cluster variance
+
+- subsceptible to curse of dimensionality
+- one hot encoded categorical can overhwelm 
+- try MiniBatchKMeans for large data sets (finds local minima so be careful)
+
+
+
+DBScan algorithm
+- also computes clusters using distance metric, but decides the number of clusters for you
+- with k means, you choose K, this is your main parameter
+
+
+**Hierarchical Clustering**
+- Another clustering method (creating groups through hierarchies)
+- don't have to commit to a value of k beforehand
+- results don't depend on initialization
+- not limited to euclidean distance as the similiarity metric
+- easy vizualized through dendograms
+    - height of "fusion" on dendrogram quantifies the separation of clusters
+
+Measures of disimilarity between groups
+
+* single linkage: In single linage hierarchical clustering, the distance betwen two clusters is defined as the shortest distance between two points in each cluster.  
+
+* complete linkage: the distance between two clusters is defined as the longest distance between two points in each cluster. Drawback:
+
+* average linkage: The distance between two clusters is defined as the average distance between each point in one cluster to every point in the other cluster
+
+1. Difference between unsupervised and supervised:
+* Unsupervised as no target, trying to find underlying relationships in the data. 
+2. Intro to clustering
+* 
+3. Use cases for cluster
+* marketing purposes: segment out customer base to see types of people you're dealing with
+
+**K-means algorithim**
+* How to code: Intilize centroids. until we meet stopping condition, assign data to centroids, compute new centroid means. 
+
+* centroid inilization: Random assignment, K means  ++
