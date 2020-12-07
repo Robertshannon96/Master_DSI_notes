@@ -3762,6 +3762,54 @@ f(i,d) = the count of term i in the document d for all words in the vocabulary V
 
 log(docs/ 1 + docs containing t)
 
+
+
+# Naive Bayes lecture
+
+What is bayes Rule?
+* Describes the probability of an event, based on prior knowledge of conditions that might be related to the event.
+
+![bayes](images/bayes.png)
+
+Bayes uses: Classiying emails, classiying news articles into genres, sentiment analysis.
+
+1. If A is spam or not, B is email text, how would you state bayes theorem?
+
+* The probability of spam given the text in the eamil = the probability of the text in the email given its not spam * the probability that its spam / the probability of the text in the email.
+
+2. If A is types of new articles (politics, sports, etc), and B is the article text, how would you state bayes theorem?
+
+* The probability of A being Politics = the probability of article text given the probabilty of it being politics * probability of politics / probability of text
+
+3. If A is sentiment, and B is review text, how would you state Bayes theorem
+
+![bayes](images/bayes2.png)
+
+
+And Conditional probabilities as well
+
+ ![bayes](images/cond.png)
+
+
+ ![bayes](images/mle.png)
+
+laplace smoothing - removes the possibility of have a proability of 0 and removes the zero from the demononator which would break the equation
+
+naive bayes pros:
+* Good with wide data (p >> n)
+* Good if n is small or n is quite big
+* fast to train - its just counting
+* good at online learning, streaming data, elarns by processing one data point at a time
+* simple to implement, not necessarily memory-bound
+* multi-class classification
+
+naive bayes cons:
+* naive assumption means correlated features are not actually treated right
+* sometimes outperformed by other models
+
+
+
+
 ## Clustering lecture
 
 **Suprivised**
@@ -3866,3 +3914,12 @@ Measures of disimilarity between groups
 * How to code: Intilize centroids. until we meet stopping condition, assign data to centroids, compute new centroid means. 
 
 * centroid inilization: Random assignment, K means  ++
+
+### SVD Lecture
+
+SVD equation
+![svd](images/svd.png)
+
+PCA Equation
+
+![pca](images/pca.png)
