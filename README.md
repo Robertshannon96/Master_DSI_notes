@@ -4057,3 +4057,69 @@ MCMC is a method used to estimate a posterior distribution of a parameter of int
 Essentially, we are going to take a new approach to the same models we have learned before, but rather than learning the parameters we are going to learn distributions of the parameters.
 
 ![mcma](images/mcma)
+
+
+# Content-based-recommendation systems
+
+A recinnebder is an infroamtion filtering and retrieval system whose prupose is to provide useful recommendations to the user
+
+**Content-based**
+* item attributes and user-item preferences are used to recommend similar items
+
+**Collaborative filtering** 
+* user item interactions (such as ratings) are used to identify similarities between users and ratings to recommend items. 
+
+
+Building a content-based recommender (step to a recommender
+)
+1. build an item profile for each item
+    * feature extraction
+    * feature representation and cleaning
+2. build a user profile for the user:
+    * freature selection and weighting
+    * getting user preference
+
+3. Generate recommendations:
+    * decide on distance metric
+    * return n-nearerst items
+
+
+* Item profile: Feature extraction:
+exampels: bag of words, title/author, color, price
+
+* Item profile: feature representaion and cleaning
+examples: remove stop words, tf or tf-idf, phrase extraction, stnadardize
+
+* user profile: feature selection and weighting
+examples: Does noise in the data lead to overfitting?
+- tf or tf-idf?
+- expand contract stop words set
+- re scale numerical features
+- for like/disl.ike add features values for likes and subtract dislike
+- add more weight to newer ratings (time decay for older interactions)
+- add more weight o more relevant features (news topic, movie genre)
+
+* user profile: getting user preference
+need to know what items the user likes
+examples:
+- ratings, implicit feedback, text descriptions (sentiment analysis)
+- cases (or items) they are intested in
+
+* generate recommendation
+ knowing what items the user likes, find items with simniliar attreibutes
+ - decide on similiarity metric (cosine, euclidean, jaccard)
+ - similiarity metric for data containing both numer and categorical data: recommend k prototypes 
+ - find the n-tiems that similiar
+ - recommend them
+
+
+ pros/cons of the content based recommendors
+
+ * pros:
+    - easy to interpret reason behind recommendation
+    - easy to modify recommendations by modiying the layout of items features
+    - can avoid the cold start problem for items (more so than collaborative recommendors)
+* cons:
+    - recoomendations will ot be diverse or unexpected
+    - limited understanding of context
+    
