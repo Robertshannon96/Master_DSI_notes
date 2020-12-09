@@ -3923,3 +3923,137 @@ SVD equation
 PCA Equation
 
 ![pca](images/pca.png)
+
+
+## Flask lecture
+
+ A web browser sends, requests, receives, and renders data on the internet and WWW.
+Typical steps are:
+1. A user inputs a URL into the address bar
+2. A GET request is sent to the appropriate web server
+3. The web server responds with HTML (Hypertext Markup Language) and associated content (CSS - Cascading Style Sheets, images, video, etc.)
+4. The browser’s layout engine renders the content (including HTML and CSS)
+
+![html](images/html.png)
+
+
+Flask is a web micro-framework. It provides you with the minimal tools and libraries to build a web application in Python. It’s a micro-framework in that it only has two dependencies:
+
+* Werkzeug - a WSGI (Web Server Gateway Interface) utility library for interface between web servers and web applications for the Python programming language.
+* Jinja2 - its html template engine
+
+Flask is normally comprised of:
+* app.py
+* templates/index.html
+* static/style.css
+
+all of this is put in an app folder
+
+
+![flask_app](images/flask_app.png)
+
+
+ **Jinja2** is a templating language for Python, modeled after Django. Besides allowing HTML to be removed from the Flask app and placed into a template, it allows data to be passed-in, allowing the web page to dynamically change with the data it is given. It has many other advantages (see website).
+
+
+ # Graphs Introduction 
+ A Graph is a structure comprised of a set of objects (nodes) where some of the objects have a relationship between each other (Edges).
+
+ * Undirected graph: edges represent two-way relationship
+    * ex: Friendships, communications, marriage (hopefully), Mutualism (where both species benefit)
+* Directed graph: edges represent one-way relationships
+    * ex: twitter followers, phone calls
+* Weighted graph: edges also have a number (often a sort of cost) associated with them
+
+undirected and weighted: 4 lane highways, plumbing
+directed unweighted: predatory/prey family trees
+
+
+* A graph is connected if every pair of nodes is connected by some path.
+
+* A graph is disconnected if it is not connected. In this case, each connected piece of the graph is called a component.
+
+* Edge list: A list of the edges (and weights if applicable)
+* adjacency list: a dictionary containg each node & its list of neighbors
+* adjacency matrix: a square matrix with rows and columns indexed by the nodes. the entries in the matrix are either 0 or 1, depending on weather the nodes are linked with an edge.
+
+**Adjacency matrix**: a square matrix with rows and columns indexed by the nodes.
+* PRO: Easy to understand and interpret.
+* PRO: Many operations are quite fast. Example: If we want to know whether two people are directly connected, we just look up the relevant row and column.
+* CON: "No edge" cells take up same amount of memory as other cells. Most larger networks are very low densities (less than .1% of the possible edges are positive), so those no-edges will waste a lot of space.
+
+**Edge list**: a list of the edges (and weights, if applicable)
+* PRO: Much less space in memory for large and sparse networks
+* PRO: Maps nice into SQL databases and text based formatss
+* CON: Searching/traversal of graph is slow. Example: if we want to know whether two people are directly connected, we have to search through the entire edge list and see if we have that edge.
+
+**Adjacency list**: a dictionary containing each node & its list of neighbors.
+* PRO: Much less space in memory for large and sparse networks
+* PRO: Fast searching and traversal, much faster than edge lists.
+* PRO: Easy to add/remove nodes and edges
+* CON: Harder to write/parse from databases and text.
+
+
+* A travesral algorithm is a method of viting every node in a graph.
+* a search algorithm is a method for searching for a specified node in a graph 
+
+**Breadth First** 
+in breadth first algorithms we traverse the graph by priotizing visiting all the neighbors of nodes before viting more neighbors.
+
+**Depth first**: in depth furst akgirthms we traverse the graph by prioritizing visint a child and the childs child, iteratibely, before backtracking and visiting the sibling nodes.
+
+![search](images/search.png)
+
+
+* Stack:
+    - Ordering: Last In, First Out (LIFO)
+    - Insertion/Removal of items: Same end of chain
+    - Analogy: a stack of dishes
+* Queue:
+    - Ordering: First In, First Out (FIFO) ordering
+    - Insertion/Removal of items: Opposite ends of chain (insert at end, remove at front)
+    - Analogy: line for movie premiere (if we were British, we'd already use the word queue instead of line)
+
+
+```python 
+def breadth_first_traversal(G, initial_node):
+    Q = deque([initial_node]) # deque is a double-edged queue
+
+    # Using a list to preserve the order nodes were visited.
+    visited = [] 
+
+    while len(Q) != 0:
+        node = Q.popleft() # pop from the left
+        if node not in visited:
+            visited.append(node)
+            Q.extend(G.neighbors(node)) # extend to the right side
+
+    return visited
+```
+
+```python
+def depth_first_traversal(G, initial_node):
+    S = deque([initial_node])
+
+    # Using a list to preserve the order nodes were visited.
+    visited = [] 
+
+    while len(S) != 0:
+        node = S.pop() # pop from the right
+        if node not in visited:
+            visited.append(node)
+            S.extend(G.neighbors(node)) # extend to the right side
+
+    return visited
+```
+
+
+
+
+# MCMC lecture
+
+MCMC is a method used to estimate a posterior distribution of a parameter of interest by randomly sampling the probabilistic space.
+
+Essentially, we are going to take a new approach to the same models we have learned before, but rather than learning the parameters we are going to learn distributions of the parameters.
+
+![mcma](images/mcma)
