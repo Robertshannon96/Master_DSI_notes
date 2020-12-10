@@ -4123,3 +4123,38 @@ examples:
     - recoomendations will ot be diverse or unexpected
     - limited understanding of context
     
+
+# Recommenders lecture
+
+A recommender is an information filtering system that seeks to predict a user ratings preference for something
+
+* Popularity - recommend whats most popular
+* Content-based: nuse similiarties based on attributes of items to group/cluster them and provide recommendations for things that are similar based on user prefrerence. 
+* Collaborative filtering - for a a given user, use ratings/preferences of similiar users to predict which unrated items the user would like. 
+
+**explicit rating**: allow users to unequivocally qunatify how much he/she liked something
+- example: did you like this song? How many stars would you give this movie?
+
+**Implicit rating**: Makes inference from user behavior. How many times have you played a song? Which songs are you playing? What movies are you watching?
+
+Collaborative filetiner
+- Conceptually: use ratings/preferences of similir users or items to predict whcih undated items the user would like. Utilizes user behavior, not item content.
+
+Types of collaborative filtering:
+* Memory, neighborhood based: Looking for KNN most similiar items/users to provide the rating/preference 
+* Model, model factorization based: usually use dimensionality reduction and latent factos to make a model to predict ratings
+* hybrid: mixes both and more. 
+
+Steps to colaborative filtering:
+The process:
+1. Gather ratings (explicit/implicit).
+2. Put ratings in a matrix (usually rows are users, columns are items).
+3. Determine where you need a rating (usually items for a given user).
+4. Realize that your rows and columns are both vectors.
+5. Can find similar vectors (user-user or item-item).
+6. Use the similarity of k users/rows to make a new rating.
+  
+
+
+* How do you verify a recommender is "right"?
+- 
