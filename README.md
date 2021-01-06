@@ -4131,8 +4131,7 @@ A recommender is an information filtering system that seeks to predict a user ra
 * Popularity - recommend whats most popular
 * Content-based: nuse similiarties based on attributes of items to group/cluster them and provide recommendations for things that are similar based on user prefrerence. 
 * Collaborative filtering - for a a given user, use ratings/preferences of similiar users to predict which unrated items the user would like. 
-
-**explicit rating**: allow users to unequivocally qunatify how much he/she liked something
+sequivocally qunatify how much he/she liked something
 - example: did you like this song? How many stars would you give this movie?
 
 **Implicit rating**: Makes inference from user behavior. How many times have you played a song? Which songs are you playing? What movies are you watching?
@@ -4157,4 +4156,213 @@ The process:
 
 
 * How do you verify a recommender is "right"?
-- 
+- thats a great question.
+
+
+# Matrix facotization lecture
+
+
+* Collaborative filtering (neighborhood models) -> memory based. Just store data so we can query what/whom is most similar when asked to recommend
+
+* Factorization techniques -> Model based. Creates predictions, from which the most suitable can be recommended
+
+Computing the factorization
+
+* similiar to what we did to find the factorization in NMF, we're going to minimize a cost function.
+* Now, though we cant do it at the level of the entirety of X, since it is sparce.
+* however, we can optimize with respect to the data in X that we do have. 
+
+
+# Forecasting lecture
+Forecasting is the process of making predictions of the future based on past and present data and most commonly by analysis of trends.
+
+* Moving average: the output variable x depends lineraly on the current and q past values of stochastic (imperfectly predicatble) term, usually lagged error
+
+
+* ARIMA
+    - Ar: (auto regressive) indicates that the evolving variable of interest is regressed on its own lagged values
+    - Ma: (moving average) indicates that the (variable of interest) is actually a linear coombination of error terms whose values occurred contemporaneously at various times in the past
+    - The I (for "integrated") indicates that the data values have been replaced with the difference between their values and the previous values (and this differencing process may have been performed more than once).
+
+    - the purpose of each of these features is to make the model fit the data as well as possible. 
+
+    Stationarity
+    - a time series is stationary if all its statisical properties: mean, variance, autocorrelation, are constant in time. 
+    - The ARMA calculation ssumes this, so to get a good AR or MA coefficients the series needs to be stationary first, Stationarity is usually achieved through differencing.
+    - the augmented-dickery-fuller test is a hypothesis test for stationary of a series. 
+
+    **finding p,d,q: box-jenkins methodology**
+    1. model identification and model selection
+        - make the series stationary (using d) then use plots of the autocorrelation (ACF) and partial autocorrealtion (PACF) functions to decide which AM or MA components should be used in the model. 
+
+    2. Parameter estimation
+        - Find the coefficients that best fit the selected ARIMA model using MLE or non-linear least-squares estimation.
+    
+    3. Check
+        - The residuals should be independent of each other and constant in mean and variance over time.
+ 
+    lag values: delay. A time period of one = 1, difference of 1 time period.
+
+# Rosie Recurrent Neural networks
+
+Recurrent Neural Networks
+* Models based on the connection of simple computational units, loosely analogous to neurons in the human brain.
+
+RNN use cases:
+* Pattern recognition: handwriting, captioning images Sequential data: speech recognition, stock price prediction, and generating text and news stories
+
+
+Multi-layer perceptron
+* maps input data to corresponding outputs. Calculation feeds forward through network
+* nodes are arranged in layers
+* nodes have alues for any input given the sum of inputs to the node and an activation function that fransforms the sum to a non-linear output
+* The “learning” in the network is held by the trained values of the connections (the weights). These weights start with random values.
+
+Benefit of the intra- layer recurrent connections 
+* 
+
+
+
+
+
+# auto encoder lecture (kayla)
+
+
+1. what is the learning in neural netowrks
+- weights
+2. how do the weights get updated?
+- back propagate with gradient decent to update the weights
+3. name some hyperparameters to tune in multilayer perceptrons
+- hidden layers, activation function, 
+4. what activation function would you use in the final layer for:
+    - multi class output: soft max
+    - a value representing a probability between 0 and 1: sigmoid
+    - mulitple values each with their own probability betweeen 0 and 1 : sigmoid
+5. what does supervised learning mean?
+
+6. what does unsupervised learning mean?
+    - trying to understand the strucutre of the data rather than trying to perdict your data
+7. what do you think self supervised learning means?
+    - 
+
+Autoencoders
+
+* ann used to learn efficient data codings through an econding/decoding process
+* from of self-supervised learning
+    - its outputs are the inputs (or variations on the inputs)
+* autoencoder (embed) the input into a lower demnsional space (its lossy)
+
+Common uses: 
+* reduction in dimensionaltiy of data before sending to another algorithm
+* denoising (noise added to input, output is input without noise)
+* recently, generative (learns parameters of distributions)
+* face recognition
+
+
+# Multi Armed bandit lecture
+
+**Review**
+Supervisedlearning : Data that is labeled?
+unsupervised learning : looking for the relationships in the data, underlying pattern rather than answer something
+
+* Reinforcement learning :  is an area of machine learning concerned with how software agents ought to take actions in an evnironment in order to maximize the notion of cumulative reward.
+
+
+* Regrest is imsply a measure of how often you choose a suboptimal bandit. We can think of this as the cost function we are tying to minimize
+
+Zero-regret strategy
+* A strategy whose average regret per round p/t tents to zero when then number of rounds played tents toward infinity
+
+Epsilon-Greedy Strategy
+* Explore with some probability
+* exploit at all other times, ex:choose the bandit witht he best performace so far
+* after we choose a given bandit we update its performance based on the result 
+* exhibits linear regret for constant
+
+UCB1: Upper confidence bound
+* exhibits optimism in the face of uncertainty
+
+Softmax
+* for the softmax algorithm we will choose the bandit randomly, in proportion to its estimated value realtive to the other bandits
+
+Bayesian bandits
+* the bayesian bandit algorithm involves modeling each of our badnits with a beta distribution using shape parameters. 
+* Bayesian bandits provide an approximately-optimal solution that scaled and performs quite well
+
+
+
+# Test driven development lecture
+
+TDD relies on the repition of a short software development cycle
+1. Requirements are turned into specific test cases
+2. software is improved to pass the new tests only
+
+TDD cycle (high level)
+1. establish accepctance criteria
+2. write failing test(s)
+3. write code-under-test
+4. observe passing tests
+5. read accepctance criteria
+6. refactor (improvment)
+7. repeat
+
+unittest is the test module in the python standard library
+others: doctest, pytest, tox, nose2, testify
+
+* Test cases - single scenarios that must be set up and checked for correctness
+
+
+# Salaray negotiation lecture
+
+Helpful phrases:
+
+
+Deflect:
+*  I would perfer to learn more about your organization and the position expectations before discussing salary
+* I'm happy to entertain any reasonable offer within the market rate for data scientis.
+* What range do you have in mind for this position?
+
+Early stage:
+* Im looking for fair market value
+* While salary is important to me, im looking for a company that is a great fit in terms of......
+* What is your salary range for this position
+* I know what the market has to offer but im unsure of your specific budget. What is your.........
+
+
+Middle stage:
+* im looking at overall compensation, including bonuses, benefits, equity etc. So without having those details im unable to provide an accurate salary expectation
+* If I were to be given an offer, Im confident we'd be able to reach an agreement
+* I trust that if you were to extend an offer, it would be a fair one
+*
+
+1. determine market value
+2. familizarize yourself with offer
+3. take a step back
+4. strategize
+5. scedule time to reconnect with employer
+6. negotiate
+7. take a step back again
+8. accept the offer
+
+aspects:
+* healthcare
+* retirement plan (401k, matching)
+* Equity options
+* commute and/or meal stipend
+
+
+"Im excited about the offer and was wondfering if you have some time tomorrow to discuss a few questions that i have. I look forward to speaking with you
+
+Best... "
+
+XYZ model
+
+* X: Given my experience developing models, in addition to extracting and communicating key results for all types of audiences,
+* Y: I am confident that I will be 
+
+
+
+X: action you've done in the past (shows skills)
+Y: How this benefits the company (connects to company needs)
+Z: Your bolstering range (based on research)
+
